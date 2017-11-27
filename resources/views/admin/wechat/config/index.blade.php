@@ -1,10 +1,13 @@
 @extends('admin.layouts.iframe_app')
 @section('content')
-    <fieldset><legend>接口管理</legend></fieldset>
-    <form class="layui-form" id="app">
+    <!-- <fieldset><legend>接口管理</legend></fieldset> -->
+    <fieldset class="layui-elem-field">
+      <legend>接口管理</legend>
+      <div class="layui-field-box">
+        <form class="layui-form" id="app">
         <div class="layui-form-item">
             <label class="layui-form-label">公众号名称</label>
-            <div class="layui-input-block">
+            <div class="layui-input-inline">
                 <input v-model="name" type="text" name="name" required placeholder="请输入标题" autocomplete="off" class="layui-input">
             </div>
         </div>
@@ -54,6 +57,9 @@
             <button type="button" class="layui-btn layui-btn-primary" @click="set">设置</button>
         </div>
     </form>
+      </div>
+    </fieldset>
+
 @endsection
 @section('script')
     <script>

@@ -1,4 +1,4 @@
-<div class="layui-side layui-bg-black">
+<!-- <div class="layui-side layui-bg-black">
     <div class="layui-side-scroll">
         <ul class="layui-nav layui-nav-tree"  lay-filter="test">
             <li class="layui-nav-item">
@@ -17,18 +17,48 @@
             </li>
         </ul>
     </div>
-</div>
+</div> -->
 
-{{--------模板，复制用--------}}
-{{--
-<li class="layui-nav-item">
-    <a href="javascript:void(0);">解决方案</a>
-    <dl class="layui-nav-child">
-        <dd><a href="javascript:void(0);">列表一</a></dd>
-        <dd><a href="javascript:void(0);">列表二</a></dd>
-        <dd><a href="">超链接</a></dd>
-    </dl>
-</li>
-<li class="layui-nav-item"><a href="">云市场</a></li>
-<li class="layui-nav-item"><a href="">发布商品</a></li>
---}}
+
+<div class="layui-side layui-bg-black kit-side">
+    <div class="layui-side-scroll">
+        <div class="kit-side-fold"><i class="fa fa-navicon" aria-hidden="true"></i></div>
+        <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+        <ul class="layui-nav layui-nav-tree" lay-filter="kitNavbar" kit-navbar>
+            <li class="layui-nav-item">
+                <a class="" href="javascript:;"><i class="fa fa-plug" aria-hidden="true"></i><span>会员管理</span></a>
+                <dl class="layui-nav-child">
+                    <dd>
+                        <a href="javascript:;" data-url="{{ url('admin/user/index') }}" data-icon="fa-user" data-title="微信会员" kit-target data-id='1'>
+                            <i class="fa fa-user" aria-hidden="true"></i>
+                            <span>微信会员</span>
+                        </a>
+                    </dd>
+                </dl>
+            </li>
+             <li class="layui-nav-item">
+                <a class="" href="javascript:;"><i class="fa fa-plug" aria-hidden="true"></i><span>微信设置</span></a>
+                <dl class="layui-nav-child">
+                    <dd>
+                        <a href="javascript:;" data-url="{{ url('admin/wechat/config') }}"" data-icon="fa-user" data-title="接口管理" kit-target data-id='2'>
+                            <i class="fa fa-user" aria-hidden="true"></i>
+                            <span>接口管理</span>
+                        </a>
+                    </dd>
+                    <dd>
+                        <a href="javascript:;" data-url="{{ url('admin/wechat/menu') }}"" data-icon="fa-user" data-title="自定义菜单" kit-target data-id='3'>
+                            <i class="fa fa-user" aria-hidden="true"></i>
+                            <span>自定义菜单</span>
+                        </a>
+                    </dd>
+                    <dd>
+                        <a href="javascript:;" data-url="javascript:;"" data-icon="fa-user" data-title="自定义回复" kit-target data-id='4'>
+                            <i class="fa fa-user" aria-hidden="true"></i>
+                            <span>自定义回复</span>
+                        </a>
+                    </dd>
+                </dl>
+            </li>
+        </ul>
+    </div>
+</div>

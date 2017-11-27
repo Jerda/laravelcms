@@ -6,18 +6,34 @@
     @yield('meta')
 </head>
 <body class="layui-layout-bod">
-<div class="layui-layout layui-layout-admin">
+<div class="layui-layout layui-layout-admin kit-layout-admin">
     @include('admin.layouts.header')
     @include('admin.layouts.menu')
-    <div class="layui-body">
+    <div class="layui-body" id="container">
         <div style="padding: 15px;">
-            @yield('nav')
         </div>
-        <iframe name="main_iframe" src="{{ url('admin/_index') }}" style="width:100%"></iframe>
         {{--@yield('content')--}}
     </div>
 </div>
 @include('admin.layouts.footer')
+<script type="text/javascript">
+    var message;
+    var ADMIN = "{{asset('plugins')}}"
+    var MAIN = "{{url('admin/user/index')}}";    //控制面板显示URL
+    layui.config({
+        base: "{{ asset('plugins/build/js') }}" + "/"
+    }).use(['app'], function() {
+        var app = layui.app,
+            $ = layui.jquery,
+            layer = layui.layer;
+        //将message设置为全局以便子页面调用
+        message = layui.message;
+        //主入口
+        app.set({
+            type: 'iframe'
+        }).init();
+    });
+</script>
 @yield('script')
 </body>
 </html>
