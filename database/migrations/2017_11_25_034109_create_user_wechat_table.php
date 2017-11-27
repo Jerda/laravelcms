@@ -21,7 +21,7 @@ class CreateUserWechatTable extends Migration
             $table->string('openid')->nullable()->comment('微信OPENID');
             $table->string('nickname')->nullable()->commnet('昵称');
 //            $table->json('wechat_info')->nullable()->comment('微信详情');
-            $table->string('avatar')->nullable()->comment('头像');
+            $table->text('avatar')->nullable()->comment('头像');
             $table->string('qrcode')->nullable()->commment('个人二维码');
 //            $table->string('wechat_username')->nullable()->comment('微信名');
             $table->tinyInteger('sex')->nullable()->comment('姓名');

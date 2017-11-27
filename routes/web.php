@@ -24,9 +24,8 @@ Route::get('captcha/{config?}', function(\Mews\Captcha\Captcha $captcha, $config
 Route::any('wechat/serve', 'Admin\Wechat\WechatController@actionServer');
 
 Route::any('test', function() {
-    /*$user_id = app('WechatTool')->getUserIdByOpenID('omJVMw2kNWIJt_zVUp0eG5lTC8w0');
-    $user = \App\Model\User::find($user_id);
-    $user->delete();*/
+    $res = app('WechatTool')->synchronizeUserGroup()->groups;
+    dd($res);
 });
 
 /*
@@ -64,6 +63,13 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
 
         Route::group(['prefix' => 'user'], function() {
             Route::get('/index', 'User\WechatUserController@index');
+            Route::post('/getUsers', 'User\WechatUserController@getUsers');
+
+            Route::group(['prefix' => 'user_wechat'], function() {
+                Route::post('/synchronize_user', 'User\WechatUserController@synchronizeUsers');
+                Route::get('/group', 'User\WechatUserController@showGroup');
+                Route::post('/group/synchronize', 'User\WechatUserController@synchronizeGroup');
+            });
         });
     });
 });
