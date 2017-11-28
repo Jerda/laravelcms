@@ -325,7 +325,6 @@ class WechatTool
 
 
     /**
-<<<<<<< HEAD
      * 添加微信用户
      * @param $openid
      */
@@ -396,8 +395,6 @@ class WechatTool
 
 
     /**
-=======
->>>>>>> tsq
      * 准备用户的微信数据以便存入数据库
      * @param array $data
      * @return array
@@ -409,79 +406,4 @@ class WechatTool
         $data['avatar'] = $data['headimgurl'];
         return $data;
     }
-
-
-<<<<<<< HEAD
-
-=======
-    /**
-     * 通过openid获取用户ID
-     * @param $openid
-     * @return mixed
-     */
-    public function getUserIdByOpenID($openid)
-    {
-        $user_detail = UserWechat::where('openid', $openid)->first();
-
-        if (empty($user_detail)) {
-            return null;
-        }
-
-        return $user_detail->user()->first()->id;
-    }
-
-
-    /**
-     * 根据openid添加微信用户
-     * @param $openid
-     */
-    public function addUser($openid)
-    {
-        $user_wechat = $this->getUserWechat($openid);
-
-        $User = new User();
-
-        $User->setWechatData($this->formatUserDetailData($user_wechat->toArray()));
-
-        $User::create([]);
-    }
-
-
-    /**
-     * 根据openid删除用户
-     * @param $openid
-     */
-    public function delUser($openid)
-    {
-        $user_id = $this->getUserIdByOpenID($openid);
-
-        $user = User::find($user_id);
-
-        $user->delete();
-    }
-
-
-
-    public function synchronizeUserGroup()
-    {
-        return $this->app->user_group->lists();
-    }
-
-
-    /**
-     * 获取微信配置
-     */
-    private function getOptions()
-    {
-        $account = WechatAccount::first();
-
-        if (!empty($account)) {
-//            $this->_options = $account->toArray();
-            $this->options['app_id'] = $account['app_id'];
-            $this->options['secret'] = $account['app_secret'];
-            $this->options['token'] = $account['token'];
-            $this->options['aes_key'] = $account['encoding_aes_key'];
-        }
-    }
->>>>>>> tsq
 }

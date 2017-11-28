@@ -59,11 +59,15 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
             Route::post('/menu/del', 'Wechat\MenuController@actionDel');
             Route::post('/menu/issue', 'Wechat\MenuController@issueMenus');
         });
-
+        /**
+         * 用户管理
+         */
         Route::group(['prefix' => 'user'], function() {
             Route::get('/index', 'User\WechatUserController@index');
             Route::post('/getUsers', 'User\WechatUserController@getUsers');
-
+            /**
+             * 微信用户
+             */
             Route::group(['prefix' => 'user_wechat'], function() {
                 Route::post('/synchronize_user', 'User\WechatUserController@synchronizeUsers');
                 Route::get('/group', 'User\WechatUserController@showGroup');
