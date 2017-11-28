@@ -6,12 +6,13 @@
         </div>
         <!-- /.box-header -->
         <!-- form start -->--}}
-        <form role="form" id="form">
-            <div class="box-body">
-                <div class="form-group">
-                    <button class="layui-btn layui-btn-sm">同步用户分组</button>
-                </div>
+        <div class="box-body">
+            <div class="form-group">
+                <button class="layui-btn layui-btn-sm" @click="synchronize">同步用户分组</button>
+                <button class="layui-btn layui-btn-sm" @click="addGroup">添加用户分组</button>
             </div>
+        </div>
+        <form role="form" id="form">
         </form>
     </div>
 @endsection
@@ -29,10 +30,13 @@
                 groups: ''
             },
             methods: {
-                synchronize: function() {
+                synchronize: function () {
                     this.$http.post(url.synchronize, {}).then(respond => {
                         this.groups = respond.body.data;
                     });
+                },
+                addGroup: function () {
+
                 },
             },
         });

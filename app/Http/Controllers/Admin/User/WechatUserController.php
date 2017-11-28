@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\User;
 
 use App\Model\User;
 use Illuminate\Http\Request;
+use App\Model\Admin\Wechat\UserGroup;
 use App\Http\Controllers\Admin\BaseController;
 
 class WechatUserController extends BaseController
@@ -25,7 +26,6 @@ class WechatUserController extends BaseController
     {
         return view('admin.user.wechat_user.index');
     }
-
 
     /**
      * 获取微信用户数据
@@ -67,10 +67,21 @@ class WechatUserController extends BaseController
     }
 
 
-    public function synchronizeGroup()
+    /**
+     * 同步用户组
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function synchronizeUserGroups()
     {
-        $groups = $this->wechat_tool->synchronizeUserGroup()->groups;
+        $groups = $this->wechat_tool->getUserGroups()->groups;
 
-        return response()->json(['data' => $groups]);
+        foreach ($groups as $group) {
+
+            if (empty(UserGroup::where('name', $group['name'])->first())) {
+                UserGroup::create(['group_id' => $group['id'], 'name' => $group['name'], 'count' => $group['count']]);
+            }
+        }
+
+        return response()->json(['msg' => trans('system.synchronize_success')]);
     }
 }
