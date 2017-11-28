@@ -378,6 +378,27 @@ class WechatTool
 
 
     /**
+     * 添加用户分组
+     * @param $name
+     */
+    public function addUserGroup($name)
+    {
+        $this->app->user_group->create($name);
+    }
+
+
+    /**
+     * 修改用户分组
+     * @param $group_id
+     * @param $name
+     */
+    public function modifyUserGroup($group_id, $name)
+    {
+        $this->app->user_group->update($group_id, $name);
+    }
+
+
+    /**
      * 获取微信配置
      */
     private function getOptions()

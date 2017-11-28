@@ -25,6 +25,8 @@
 
         var url = {
             synchronize: "{{ url('admin/user/user_wechat/synchronize_user_group') }}",
+            add: "{{ url('admin/user/user_wechat/add_user_group') }}",
+            modify: "{{ url('admin/user/user_wechat/modify_user_group') }}",
         };
 
         new Vue({
@@ -35,7 +37,10 @@
             },
             methods: {
                 synchronize: function () {
+                    var load = parent.layer.load(0, {shade: false});
+
                     this.$http.post(url.synchronize, {}).then(respond => {
+                        parent.layer.close(load);
                         parent.message.show({
                             skin: 'cyan',
                             msg: respond.body.msg
@@ -44,6 +49,26 @@
                 },
                 addGroup: function() {
 
+                    if (this.group_name === '') {
+                        parent.message.show({
+                            skin: 'red',
+                            msg: '必须填写分组名称'
+                        });
+                    } else {
+                        this.$http.post(url.add, {name: this.group_name}).then(respond => {
+                            if (respond.body.status === 1) {
+                                parent.message.show({
+                                    skin: 'cyan',
+                                    msg: respond.body.msg
+                                });
+                            } else {
+                                parent.message.show({
+                                    skin: 'red',
+                                    msg: respond.body.msg
+                                });
+                            }
+                        });
+                    }
                 }
             },
         });

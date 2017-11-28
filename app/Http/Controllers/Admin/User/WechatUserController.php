@@ -86,8 +86,36 @@ class WechatUserController extends BaseController
     }
 
 
-    public function addUserGroup()
+    /**
+     * 添加用户组
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function addUserGroup(Request $request)
     {
-        $this->wechat_tool->addUserGroup();
+        $name = $request->input('name');
+
+        if (!empty(UserGroup::where('name', $name)->first())) {
+            return response()->json(['status' => 0, 'msg' => trans('system.name_is_exists')]);
+        }
+
+        $this->wechat_tool->addUserGroup($name);
+
+        return response()->json(['status' => 1, 'msg' => trans('system.add_success')]);
+    }
+
+
+    /**
+     * 修改用户组名称
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function modifyUserGroup(Request $request)
+    {
+        $data = $request->only(['group_id', 'name']);
+
+        $this->wechat_tool->modifyUserGroup($data['group_id'], $data['name']);
+
+        return response()->json(['msg' => trans('system.modify_success')]);
     }
 }

@@ -72,11 +72,10 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
                 Route::post('/synchronize_user', 'User\WechatUserController@synchronizeUsers');
                 Route::get('/group', 'User\WechatUserController@showGroup');
                 Route::post('/synchronize_user_group', 'User\WechatUserController@synchronizeUserGroups');
+                Route::post('/add_user_group', 'User\WechatUserController@addUserGroup');
+                Route::post('/modify_user_group', 'User\WechatUserController@modifyUserGroup');
             });
         });
     });
 });
 
-//Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
