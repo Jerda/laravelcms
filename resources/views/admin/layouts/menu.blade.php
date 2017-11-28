@@ -26,35 +26,64 @@
         <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
         <ul class="layui-nav layui-nav-tree" lay-filter="kitNavbar" kit-navbar>
             <li class="layui-nav-item">
-                <a class="" href="javascript:;"><i class="fa fa-plug" aria-hidden="true"></i><span>会员管理</span></a>
+                <a class="" href="javascript:;"><span>会员管理</span></a>
                 <dl class="layui-nav-child">
                     <dd>
-                        <a href="javascript:;" data-url="{{ url('admin/user/index') }}" data-icon="fa-user" data-title="微信会员" kit-target data-id='1'>
+                        <a href="javascript:;" data-url="{{ url('admin/user/index') }}" data-icon="fa-user"
+                           data-title="微信会员" kit-target data-id='1'>
                             <i class="fa fa-user" aria-hidden="true"></i>
                             <span>微信会员</span>
                         </a>
                     </dd>
                 </dl>
             </li>
-             <li class="layui-nav-item">
-                <a class="" href="javascript:;"><i class="fa fa-plug" aria-hidden="true"></i><span>微信设置</span></a>
+            <li class="layui-nav-item">
+                <a class="" href="javascript:;"><span>微信设置</span></a>
                 <dl class="layui-nav-child">
                     <dd>
-                        <a href="javascript:;" data-url="{{ url('admin/wechat/config') }}"" data-icon="fa-user" data-title="接口管理" kit-target data-id='2'>
+                        <a href="javascript:;" data-url="{{ url('admin/wechat/config') }}" data-icon="fa-user"
+                           data-title="接口管理" kit-target data-id='2'>
                             <i class="fa fa-user" aria-hidden="true"></i>
                             <span>接口管理</span>
                         </a>
                     </dd>
                     <dd>
-                        <a href="javascript:;" data-url="{{ url('admin/wechat/menu') }}"" data-icon="fa-user" data-title="自定义菜单" kit-target data-id='3'>
+                        <a href="javascript:;" data-url="{{ url('admin/wechat/menu') }}" data-icon="fa-user"
+                           data-title="自定义菜单" kit-target data-id='3'>
                             <i class="fa fa-user" aria-hidden="true"></i>
                             <span>自定义菜单</span>
                         </a>
                     </dd>
                     <dd>
-                        <a href="javascript:;" data-url="javascript:;"" data-icon="fa-user" data-title="自定义回复" kit-target data-id='4'>
+                        <a href="javascript:;" data-url="javascript:;" data-icon="fa-user" data-title="自定义回复" kit-target
+                           data-id='4'>
                             <i class="fa fa-user" aria-hidden="true"></i>
                             <span>自定义回复</span>
+                        </a>
+                    </dd>
+                </dl>
+            </li><li class="layui-nav-item">
+                <a class="" href="javascript:;"><span>系统设置</span></a>
+                <dl class="layui-nav-child">
+                    <dd>
+                        <a href="javascript:;" data-url="javascript:;" data-icon="fa-user"
+                           data-title="接口管理" kit-target data-id='2'>
+                            <i class="fa fa-user" aria-hidden="true"></i>
+                            <span>管理员管理</span>
+                        </a>
+                    </dd>
+                    <dd>
+                        <a href="javascript:;" data-url="javascript:;" data-icon="fa-user"
+                           data-title="自定义菜单" kit-target data-id='3'>
+                            <i class="fa fa-user" aria-hidden="true"></i>
+                            <span>角色管理</span>
+                        </a>
+                    </dd>
+                    <dd>
+                        <a href="javascript:;" data-url="javascript:;" data-icon="fa-user" data-title="自定义回复" kit-target
+                           data-id='4'>
+                            <i class="fa fa-user" aria-hidden="true"></i>
+                            <span>权限管理</span>
                         </a>
                     </dd>
                 </dl>

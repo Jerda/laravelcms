@@ -269,23 +269,13 @@ class WechatTool
     {
         switch ($message->Event) {
             case 'subscribe' :        //关注
-                $user_wechat = $this->getUserWechat($message->FromUserName);
-
-                $User = new User();
-
-                $User->setWechatData($this->formatUserDetailData($user_wechat->toArray()));
-
-                $User::create([]);
+                $this->addUser($message->FromUserName);
 
                 return trans('system.wechat_welcome');
 
                 break;
             case 'unsubscribe' :      //取消关注
-                $user_id = $this->getUserIdByOpenID($message->FromUserName);
-
-                $user = User::find($user_id);
-
-                $user->delete();
+                $this->delUser($message->FromUserName);
 
                 break;
         }
@@ -334,6 +324,59 @@ class WechatTool
 
 
     /**
+     * 添加微信用户
+     * @param $openid
+     */
+    public function addUser($openid)
+    {
+        $user_wechat = $this->getUserWechat($openid);
+
+        $User = new User();
+
+        $User->setWechatData($this->formatUserDetailData($user_wechat->toArray()));
+
+        $User::create([]);
+    }
+
+
+    /**
+     * 删除微信用户
+     * @param $openid
+     */
+    public function delUser($openid)
+    {
+        $user_id = $this->getUserIdByOpenID($openid);
+
+        $user = User::find($user_id);
+
+        $user->delete();
+    }
+
+
+    /**
+     * 获取微信用户组
+     * @return \EasyWeChat\Support\Collection
+     */
+    public function getUserGroups()
+    {
+        return $this->app->user_group->lists();
+    }
+
+
+    /**
+     * 通过openid获取用户ID
+     * @param $openid
+     * @return mixed
+     */
+    public function getUserIdByOpenID($openid)
+    {
+        $user_detail = UserWechat::where('openid', $openid)->first();
+
+        return $user_detail->user()->first()->id;
+    }
+
+
+    /**
      * 获取微信配置
      */
     private function getOptions()
@@ -364,15 +407,5 @@ class WechatTool
     }
 
 
-    /**
-     * 通过openid获取用户ID
-     * @param $openid
-     * @return mixed
-     */
-    private function getUserIdByOpenID($openid)
-    {
-        $user_detail = UserWechat::where('openid', $openid)->first();
 
-        return $user_detail->user()->first()->id;
-    }
 }

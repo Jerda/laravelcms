@@ -115,6 +115,7 @@ return [
         ],
         'captcha' => [
             'required' => '验证码不能为空',
+            'captcha' => '验证码不正确'
         ],
     ],
 

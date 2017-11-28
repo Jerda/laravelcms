@@ -3,13 +3,13 @@
     <div class="admin-main" id="app">
         <blockquote class="layui-elem-quote">
         <div class="">
-            <a href="javascript:;" class="layui-btn layui-btn-small" id="add" @click="addMenu">
-                <i class="layui-icon"></i> 添加菜单
+            <a href="javascript:;" class="layui-btn layui-btn-sm" id="add" @click="addMenu">
+                <i class="layui-icon"></i> 添加菜单
             </a>
-            <a href="#" class="layui-btn layui-btn-small" id="import" @click="issueMenus">
+            <a href="#" class="layui-btn layui-btn-sm" id="import" @click="issueMenus">
                 <i class="layui-icon"></i> 发布菜单
             </a>
-            <a href="#" class="layui-btn layui-btn-small" id="import">
+            <a href="#" class="layui-btn layui-btn-sm" id="import">
                 <i class="layui-icon"></i> 同步菜单
             </a>
         </blockquote>

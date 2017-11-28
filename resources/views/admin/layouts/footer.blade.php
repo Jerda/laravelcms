@@ -9,7 +9,7 @@
 
 <script src="{{ asset('js/admin/common.js') }}"></script>
 <script>
-//    Vue.http.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name=csrf-token]').getAttribute('content');
+    //    Vue.http.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name=csrf-token]').getAttribute('content');
 
     // $(window).on('resize', function () {
 
@@ -19,5 +19,24 @@
     //         $(this).height($content.height());
     //     });
     // }).resize();
+    var message;
+
+    var ADMIN = "{{ asset('plugins') }}";
+
+    var MAIN = "{{ url('admin/user/index') }}";    //首页显示URL
+
+    layui.config({
+        base: "{{ asset('plugins/build/js') }}" + "/"
+    }).use(['app', 'message'], function () {
+        var app = layui.app,
+            $ = layui.jquery,
+            layer = layui.layer;
+        //将message设置为全局以便子页面调用
+        message = layui.message;
+        //主入口
+        app.set({
+            type: 'iframe'
+        }).init();
+    });
 </script>
 
