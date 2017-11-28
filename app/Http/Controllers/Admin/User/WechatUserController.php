@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\User;
 use App\Model\Admin\Wechat\UserGroup;
 use App\Model\User;
 use Illuminate\Http\Request;
+use App\Model\Admin\Wechat\UserGroup;
 use App\Http\Controllers\Admin\BaseController;
 
 class WechatUserController extends BaseController

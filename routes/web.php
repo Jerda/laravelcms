@@ -24,8 +24,7 @@ Route::get('captcha/{config?}', function(\Mews\Captcha\Captcha $captcha, $config
 Route::any('wechat/serve', 'Admin\Wechat\WechatController@actionServer');
 
 Route::any('test', function() {
-    $a = new \App\Http\Controllers\Admin\User\WechatUserController();
-    dd($a->synchronizeGroup());
+
 });
 
 /*
@@ -70,7 +69,6 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
                 Route::get('/group', 'User\WechatUserController@showGroup');
                 Route::post('/synchronize_user_group', 'User\WechatUserController@synchronizeUserGroups');
             });
-
         });
     });
 });
