@@ -2,12 +2,31 @@
 @section('content')
     <div class="admin-main" id="app">
         <blockquote class="layui-elem-quote">
-            <a class="layui-btn layui-btn-sm" id="import" href="javascript:void(0)" @click="synchronize">
-                <i class="layui-icon"></i> 同步微信用户
-            </a>
-            <a class="layui-btn layui-btn-sm" id="import" href="javascript:void(0)" @click="showGroup">
-                <i class="layui-icon"></i> 用户分组
-            </a>
+            <div class="layui-inline">
+                <input type="text" v-model="search_nickname" placeholder="请输入昵称"
+                       class="layui-input-inline header-input header-input-one">
+            </div>
+            <button class="layui-btn layui-btn-sm layui-btn-primary" @click="search">
+                <i class="fa fa-search" aria-hidden="true"></i>
+            </button>
+            <div class="layui-inline">
+                <a class="layui-btn layui-btn-sm" id="import" href="javascript:void(0)" @click="synchronize">
+                    <i class="layui-icon"></i> 同步微信用户
+                </a>
+                <a class="layui-btn layui-btn-sm" id="import" href="javascript:void(0)" @click="showGroup">
+                    <i class="layui-icon"></i> 用户分组
+                </a>
+            </div>
+
+
+            {{--<form class="layui-form">
+                <div class="layui-form-pane">
+                    <input type="text" name="nickname" class="layui-input-inline">
+                </div>
+                <button class="layui-btn layui-btn-sm layui-btn-primary">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                </button>
+            </form>--}}
         </blockquote>
         <table id="table" class="layui-table">
             <thead>
@@ -37,12 +56,11 @@
                 <td style="width:135px">
                     <button class="layui-btn layui-btn-sm">查看</button>
                     <button class="layui-btn layui-btn-sm">删除</button>
-
                 </td>
             </tr>
             </tbody>
         </table>
-        <div id="test"></div>
+        <div id="page"></div>
     </div>
 @endsection
 @section('script')
@@ -62,7 +80,9 @@
                 users: '',
                 count: '',
                 current_page: 1,
-                limit: parent.PAGE_LIMIT
+                limit: parent.PAGE_LIMIT,
+                search_nickname: '',
+                _search: []
             },
             methods: {
                 synchronize: function () {
@@ -74,13 +94,13 @@
                     });
                 },
                 getUsers: function () {
-                    axios.post(url.get_users, {limit: this.limit, page:this.current_page})
+                    axios.post(url.get_users, {limit: this.limit, page: this.current_page, search: this._search})
                         .then(response => {
                             this.users = response.data.data.data;
                             this.count = response.data.data.total;
                             this.current_page = response.data.data.current_page;
 
-                            if (this.first === 1){
+                            if (this.first === 1) {
                                 this.first = 2;
                                 pageLinks(this);
                             }
@@ -90,6 +110,15 @@
                 showGroup: function () {
                     cms_s_edit('用户分组', url.group, '400', '420');
                 },
+                search: function() {
+                    if (this.search_nickname !== '') {
+                        this._search = [{nickname: this.search_nickname}];
+                    } else {
+                        this._search = [];
+                    }
+                    this.first = 1;
+                    this.getUsers();
+                }
             },
             mounted: function () {
                 this.$nextTick(function () {

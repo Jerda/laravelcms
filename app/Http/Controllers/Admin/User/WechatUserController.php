@@ -34,9 +34,19 @@ class WechatUserController extends BaseController
      */
     public function getUsers(Request $request)
     {
-        $limit = $request->input('limit');
+//        $limit = $request->input('limit');
+        $data = $request->only(['limit', 'search']);
 
-        $users = User::with('wechat')->paginate($limit);
+        if (!empty($data['search'])) {
+            $this->formatSearchWhere($data['search']);
+//            $this->searchWhere[] = ['nickname', 'like', '%'.$data['search'][0]['nickname'].'%'];
+        }
+
+        $users = User::with('wechat')
+            ->whereHas('wechat', function($query) {
+                $query->where($this->searchWhere);
+            })
+            ->paginate($data['limit']);
 
         return response()->json(['data' => $users]);
     }

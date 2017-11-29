@@ -67,7 +67,7 @@ function pageLinks(vue)
         var laypage = layui.laypage;
         //执行一个laypage实例
         laypage.render({
-            elem: 'test' //注意，这里的 test1 是 ID，不用加 # 号
+            elem: 'page'
             ,count: vue._data.count //数据总数，从服务端得到
             ,limit: vue._data.limit
             ,jump: function(obj, first) {
@@ -78,15 +78,4 @@ function pageLinks(vue)
             }
         });
     });
-}
-
-function load()
-{
-    var load;
-
-    layui.use('layer', function() {
-        load = layer.load(0, {shade: false});
-    });
-
-    return load;
 }
