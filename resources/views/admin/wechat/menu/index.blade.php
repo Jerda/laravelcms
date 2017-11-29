@@ -92,7 +92,7 @@
             },
             methods: {
                 addMenu: function() {
-                    cms_s_edit('添加菜单', url.addMenu, '400', '420');
+                    ('添加菜单', url.addMenu, '400', '420');
                 },
                 getMenus: function() {
                     axios.post(url.getMenus, {}).then(response => {

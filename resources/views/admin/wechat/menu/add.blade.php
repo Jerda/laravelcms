@@ -6,13 +6,13 @@
         </div>
         <!-- /.box-header -->
         <!-- form start -->--}}
-        <form role="form" id="form">
-            <div class="box-body">
-                <div class="form-group">
-                    <div v-for="level in levelOnes">
-                    </div>
-                    <label for="parent_id">上级菜单</label>
-                    <select class="form-control" name="parent_id" id="parent_id" v-model="parent_id">
+        <form role="form" id="form" class="layui-form">
+            <div class="layui-form-item">
+                <!-- <div v-for="level in levelOnes">
+                </div> -->
+                <label for="parent_id" class="layui-form-label">上级菜单</label>
+                <div class="layui-input-inline">
+                    <select name="parent_id" id="parent_id" v-model="parent_id">
                         <option disabled value="">请选择</option>
                         {{--<option id="levelOne" value='0' :disabled="addableLevelOne ? false : true"
                                 v-text="addableLevelOne ? '1级菜单' : '1级菜单（1级菜单数量已达最大数量)'"></option>--}}
@@ -21,30 +21,40 @@
                                 v-text="levelOne.addable ? levelOne.name : levelOne.name + '(二级菜单已达最大数量)'"></option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label for="name">显示名称</label>
-                    <input type="text" name="name" class="form-control" id="name" :value="menu.name" v-model="name">
+            </div>
+            <div class="layui-form-item">
+                <label for="name" class="layui-form-label">显示名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="name" class="layui-input" id="name" :value="menu.name" v-model="name">
                 </div>
-                <div class="form-group">
-                    <label for="type">菜单类型</label>
+            </div>
+            <div class="layui-form-item">
+                <label for="type" class="layui-form-label">菜单类型</label>
+                <div class="layui-input-inline">
                     <select class="form-control" name="type" id="type" v-model="type">
                         <option disabled value="">请选择</option>
                         <option v-for="type in types" :value="type.value" v-text="type.text"></option>
                     </select>
                 </div>
-                <div class="form-group" id="div_url"
-                     :style="type == 'view' ? {display : 'block'} : {display : 'none'}">
-                    <label for="url">超链接</label>
-                    <input type="text" name="url" class="form-control" id="url" :value="menu.url" v-model="url">
+            </div>
+            <div class="layui-form-item" id="div_url"
+                 :style="type == 'view' ? {display : 'block'} : {display : 'none'}">
+                <label for="url" class="layui-form-label">超链接</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="url" class="layui-input" id="url" :value="menu.url" v-model="url">
                 </div>
-                <div class="form-group" id="div_key_word"
-                     :style="type == 'click' ? {display : 'block'} : {display : 'none'}">
-                    <label for="key_word">关键字</label>
-                    <input type="text" name="key_word" class="form-control" id="key_word" :value="menu.key_word"
-                           v-model="key_word">
+            </div>
+            <div class="layui-form-item" id="div_key_word"
+                 :style="type == 'click' ? {display : 'block'} : {display : 'none'}">
+                <label for="key_word" class="layui-form-label">关键字</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="key_word" class="layui-input" id="key_word" :value="menu.key_word"
+                       v-model="key_word">
                 </div>
-                <div class="form-group">
-                    <a class="btn btn-primary" @click="addMenu">添加菜单</a>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <a class="layui-btn" @click="addMenu">添加菜单</a>
                 </div>
             </div>
             {{--<input type="text" name="id" id="id" :value="menu.id" style="display: none">--}}
@@ -61,7 +71,9 @@
         };
         let levelOnes = JSON.parse('{!! json_encode($levelOnes) !!}'); //一级菜单数据
         let menu = JSON.parse('{!! json_encode($menu) !!}'); //修改模式，指定的菜单数据
-
+        layui.use(['form'], function() {
+            var form = layui.form
+        })
         new Vue({
             el: '#app',
             data: {
