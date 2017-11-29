@@ -21,7 +21,7 @@
 @endsection
 @section('script')
     <script type="text/javascript">
-        Vue.http.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name=csrf-token]').getAttribute('content');
+        axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
         var url = {
             synchronize: "{{ url('admin/user/user_wechat/synchronize_user_group') }}",
@@ -38,34 +38,20 @@
             methods: {
                 synchronize: function () {
                     var load = parent.layer.load(0, {shade: false});
-
-                    this.$http.post(url.synchronize, {}).then(respond => {
+                    axios.post(url.synchronize, {}).then(response => {
                         parent.layer.close(load);
-                        parent.message.show({
-                            skin: 'cyan',
-                            msg: respond.body.msg
-                        });
+                        toastr.success(response.data.msg);
                     });
                 },
                 addGroup: function() {
-
                     if (this.group_name === '') {
-                        parent.message.show({
-                            skin: 'red',
-                            msg: '必须填写分组名称'
-                        });
+                        toastr.success('必须填写分组名称');
                     } else {
-                        this.$http.post(url.add, {name: this.group_name}).then(respond => {
+                        axios.post(url.add, {name: this.group_name}).then(response => {
                             if (respond.body.status === 1) {
-                                parent.message.show({
-                                    skin: 'cyan',
-                                    msg: respond.body.msg
-                                });
+                                toastr.success(response.data.msg);
                             } else {
-                                parent.message.show({
-                                    skin: 'red',
-                                    msg: respond.body.msg
-                                });
+                                toastr.error(response.data.msg);
                             }
                         });
                     }

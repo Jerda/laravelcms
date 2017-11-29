@@ -24,7 +24,14 @@ Route::get('captcha/{config?}', function(\Mews\Captcha\Captcha $captcha, $config
 Route::any('wechat/serve', 'Admin\Wechat\WechatController@actionServer');
 
 Route::any('test', function() {
-
+    $a = \App\Model\Admin\Wechat\Menu::find(11);
+    $a->delete();
+    /*try {
+        $a = \App\Model\Admin\Wechat\Menu::destroy(7);
+//        $a->delete();
+    } catch (\Exception $e) {
+        dd($e->getMessage());
+    }*/
 });
 
 /*

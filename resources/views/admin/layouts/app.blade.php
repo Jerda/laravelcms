@@ -23,6 +23,8 @@
 
     var MAIN = "{{ url('admin/user/index') }}";    //首页显示URL
 
+    var PAGE_LIMIT = 3; //表格分页数
+
     layui.config({
         base: "{{ asset('plugins/build/js') }}" + "/"
     }).use(['app', 'message'], function () {

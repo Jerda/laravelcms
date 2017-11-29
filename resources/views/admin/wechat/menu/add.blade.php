@@ -40,7 +40,8 @@
                 <div class="form-group" id="div_key_word"
                      :style="type == 'click' ? {display : 'block'} : {display : 'none'}">
                     <label for="key_word">关键字</label>
-                    <input type="text" name="key_word" class="form-control" id="key_word" :value="menu.key_word" v-model="key_word">
+                    <input type="text" name="key_word" class="form-control" id="key_word" :value="menu.key_word"
+                           v-model="key_word">
                 </div>
                 <div class="form-group">
                     <a class="btn btn-primary" @click="addMenu">添加菜单</a>
@@ -52,7 +53,7 @@
 @endsection
 @section('script')
     <script type="text/javascript">
-        Vue.http.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name=csrf-token]').getAttribute('content');
+        axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
         var url = {
             'add': "{{ url('admin/wechat/menu/add') }}",
@@ -88,7 +89,7 @@
                         this.key_word = menu.key_word;
                         this.id = menu.id;
                     }
-                    if (this.levelOnes.length >= 4) {
+                    if (this.levelOnes.length >= 3) {
                         $('#levelOne').remove();
                     }
                 })
@@ -120,19 +121,20 @@
                     if (check) {
                         this.menu !== undefined ? url = url.add : url = url.modify;
                         let data = {
-                            parent_id : this.parent_id, name : this.name, type : this.type, url : this.url,
-                            key_word : this.key_word
+                            parent_id: this.parent_id, name: this.name, type: this.type, url: this.url,
+                            key_word: this.key_word
                         };
-                        this.$http.post(url.add, data).then(response => {
-                            if (response.body.status == 0) {
-                                layer.msg(response.body.message);
+                        axios.post(url, data).then(response => {
+                            if (response.data.status == 0) {
+                                toastr.error(response.data.msg);
                             } else {
-                                layer.msg(response.body.message, {time:1000}, function() {
-                                    top.location = top.location;
+                                toastr.success(response.data.msg);
+                                setTimeout(function() {
                                     layer_close();
-                                })
+                                }, 4000)
                             }
                         });
+
                     }
 
                 }

@@ -2,7 +2,6 @@
 @section('content')
     <div class="admin-main" id="app">
         <blockquote class="layui-elem-quote">
-        <div class="">
             <a href="javascript:;" class="layui-btn layui-btn-sm" id="add" @click="addMenu">
                 <i class="layui-icon"></i> 添加菜单
             </a>
@@ -13,9 +12,8 @@
                 <i class="layui-icon"></i> 同步菜单
             </a>
         </blockquote>
-        </div>
         <fieldset class="layui-elem-field">
-            <legend>数据列表</legend>
+            <legend>微信按钮</legend>
             <div class="layui-field-box layui-form">
                 <table class="layui-table admin-table">
                     <thead>
@@ -30,33 +28,33 @@
                     <tbody id="content">
                     <template v-for="(menu, index) in menus">
                         <tr>
-                            <td>@{{ menu['name'] }}</td>
-                            <td>@{{ menu['type'] }}</td>
-                            <td>@{{ menu['url'] }}</td>
-                            <td>@{{ menu['key_word'] }}</td>
-                            <td>
-                                <a type="button" class="btn btn-sm btn-primary" @click="menuModify(menu.id)">修改</a>
-                                <a type="button" class="btn btn-sm btn-danger" @click="menuDel(menu.id)">删除</a>
-                                <a type="button" class="btn btn-sm btn-info" :class="index == 0 ? 'disabled' : ''"
+                            <td>@{{ menu.name }}</td>
+                            <td>@{{ menu.type }}</td>
+                            <td>@{{ menu.url }}</td>
+                            <td>@{{ menu.key_word }}</td>
+                            <td style="width: 240px">
+                                <a type="button" class="layui-btn layui-btn-sm layui-btn-normal" @click="menuModify(menu.id)">修改</a>
+                                <a type="button" class="layui-btn layui-btn-sm layui-btn-danger" @click="menuDel(menu.id)">删除</a>
+                                <a type="button" class="layui-btn layui-btn-sm" :class="index == 0 ? 'layui-btn-disabled' : ''"
                                    @click="modifyIndex(menu.parent_id, menu.sort_id, 'up')">上移</a>
-                                <a type="button" class="btn btn-sm btn-info"
-                                   :class="index == menus.length - 1 ? 'disabled' : ''"
+                                <a type="button" class="layui-btn layui-btn-sm"
+                                   :class="index == menus.length - 1 ? 'layui-btn-disabled' : ''"
                                    @click="modifyIndex(menu.parent_id, menu.sort_id, 'down')">下移</a>
                             </td>
                         </tr>
                         <template v-if="menu.children !== 'undefined'">
-                            <tr v-for="(child, _index) in menu.children" :key="index">
-                                <td>@{{ child['name'] }}</td>
-                                <td>@{{ child['type'] }}</td>
-                                <td>@{{ child['url'] }}</td>
-                                <td>@{{ child['key_word'] }}</td>
+                            <tr v-for="(child, _index) in menu.children">
+                                <td v-html="child.name"></td>
+                                <td>@{{ child.type }}</td>
+                                <td>@{{ child.url }}</td>
+                                <td>@{{ child.key_word }}</td>
                                 <td>
-                                    <a type="button" class="btn btn-sm btn-primary" @click="menuModify(child.id)">修改</a>
-                                    <a type="button" class="btn btn-sm btn-danger" @click="menuDel(child.id)">删除</a>
-                                    <a type="button" class="btn btn-sm btn-info" :class="_index == 1 ? 'disabled' : ''"
+                                    <a type="button" class="layui-btn layui-btn-sm layui-btn-normal" @click="menuModify(child.id)">修改</a>
+                                    <a type="button" class="layui-btn layui-btn-sm layui-btn-danger" @click="menuDel(child.id)">删除</a>
+                                    <a type="button" class="layui-btn layui-btn-sm" :class="_index == 0 ? 'layui-btn-disabled' : ''"
                                        @click="modifyIndex(child.parent_id, child.sort_id, 'up')">上移</a>
-                                    <a type="button" class="btn btn-sm btn-info"
-                                       :class="_index == menu.children.length ? 'disabled' : ''"
+                                    <a type="button" class="layui-btn layui-btn-sm"
+                                       :class="_index == menu.children.length - 1 ? 'layui-btn-disabled' : ''"
                                        @click="modifyIndex(child.parent_id, child.sort_id, 'down')">下移</a>
                                 </td>
                             </tr>
@@ -67,7 +65,7 @@
             </div>
         </fieldset>
         <blockquote class="layui-elem-quote">
-            <h4>注意:</h4>
+            <h3>注意:</h3>
             <br>
             1.自定义菜单最多包括3个一级菜单，每个一级菜单最多包含5个二级菜单<br>
             2.一级菜单最多4个汉字，二级菜单最多7个汉字，多出来的部分将会以“...”代替。
@@ -76,7 +74,7 @@
 @endsection
 @section('script')
     <script>
-        Vue.http.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name=csrf-token]').getAttribute('content');
+        axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
         var url = {
             addMenu: "{{ url('admin/wechat/menu/add') }}",
@@ -90,15 +88,15 @@
         new Vue({
             el: "#app",
             data: {
-                menus: ''
+                menus: []
             },
             methods: {
                 addMenu: function() {
                     cms_s_edit('添加菜单', url.addMenu, '400', '420');
                 },
                 getMenus: function() {
-                    this.$http.post(url.getMenus, {}).then(respond => {
-                        this.menus = respond.body.data;
+                    axios.post(url.getMenus, {}).then(response => {
+                        this.menus = response.data.data;
                     });
                 },
                 menuModify: function (id) {
@@ -107,38 +105,39 @@
                 },
                 menuDel: function (id) {
                     let _this = this;
-                    layer.confirm('确定要删除此按钮？', {
+                    parent.layer.confirm('确定要删除此按钮？', {
                         btn: ['确认','取消']
-                    }, function(){
-                        _this.$http.post(url.menuDel, {id: id}).then(response => {
-                            layer.msg(response.body.message);
-                            this.getMenus();
+                    }, function(index){
+                        parent.layer.close(index);
+                        axios.post(url.menuDel, {id: id}).then(response => {
+                            toastr.success(response.data.msg);
+                            _this.getMenus();
                         });
                     });
                 },
                 modifyIndex: function (parent_id, sort_id, direction) {
-                    let load = layer.load(1, {
+                    let load = parent.layer.load(1, {
                         shade: [0.1,'#fff'] //0.1透明度的白色背景
                     });
                     let data = {parent_id: parent_id, sort_id: sort_id, direction: direction};
-                    this.$http.post(url.modifySortId, data).then(response => {
-                        layer.close(load);
+                    axios.post(url.modifySortId, data).then(response => {
+                        parent.layer.close(load);
                         this.getMenus();
                     });
                 },
                 issueMenus: function () {
-                    let load = layer.load(1, {
+                    let load = parent.layer.load(1, {
                         shade: [0.1,'#fff'] //0.1透明度的白色背景
                     });
-                    this.$http.post(url.issueMenu).then(response => {
+                    axios.post(url.issueMenu).then(response => {
 
                         if (response.body.status === 1) {
-                            layer.msg(response.body.message);
+                            toastr.success(response.data.message);
                         } else {
-                            layer.alert(response.body.message);
+                            toastr.error(response.data.message);
                         }
 
-                        layer.close(load);
+                        parent.layer.close(load);
                     });
                 },
             },

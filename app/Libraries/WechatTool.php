@@ -207,6 +207,7 @@ class WechatTool
 
     private $app;
 
+
     public function __construct()
     {
         $this->getOptions();
@@ -395,6 +396,21 @@ class WechatTool
     public function modifyUserGroup($group_id, $name)
     {
         $this->app->user_group->update($group_id, $name);
+    }
+
+
+    /**
+     * 获取微信按钮规则
+     * @param $name
+     * @return array|int
+     */
+    public function getMenuRole($name = '')
+    {
+        if ($name) {
+            return $this->menu_role[$name];
+        }
+
+        return $this->menu_role;
     }
 
 

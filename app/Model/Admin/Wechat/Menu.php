@@ -2,6 +2,7 @@
 
 namespace App\Model\Admin\Wechat;
 
+use App\Traits\WechatMenu;
 use Illuminate\Database\Eloquent\Model;
 
 class Menu extends Model
@@ -11,6 +12,7 @@ class Menu extends Model
     | 微信端按钮模型
     |--------------------------------------------------------------------------
     */
+    use WechatMenu;
 
     protected $table = 'wechat_menu';
 

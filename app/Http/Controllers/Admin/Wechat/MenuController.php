@@ -15,15 +15,17 @@ class MenuController extends WechatController
 
     public function index()
     {
-//        $menus = $this->formatMenu();
-//        return view('admin.wechat.menu.index', compact('menus'));
         return view('admin.wechat.menu.index');
     }
 
+    /**
+     * 获取按钮
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getMenus()
     {
         $menus = $this->formatMenu();
-        return response()->json(['status = 1', 'data' => $menus]);
+        return response()->json(['status' => 1, 'data' => $menus]);
     }
 
     /**
@@ -66,11 +68,13 @@ class MenuController extends WechatController
 
         $data['sort_id'] = $this->getMenuLastSortId($data['parent_id']);
 
-        if ($menu->create($data)) {
-            return response()->json(['status' => 1, 'message' => '菜单创建成功']);
-        } else {
-            return response()->json(['status' => 0, 'message' => '菜单创建失败']);
+        try {
+            $menu->create($data);
+        } catch (\Exception $e) {
+            return response()->json(['status' => 1, 'msg' => $e->getMessage()]);
         }
+
+        return response()->json(['status' => 1, 'msg' => '菜单创建成功']);
     }
 
 
@@ -84,9 +88,9 @@ class MenuController extends WechatController
         $data = $request->except('_token');
 
         if (Menu::where('id', $data['id'])->update($data)) {
-            return response()->json(['status' => 1, 'message' => '菜单修改成功']);
+            return response()->json(['status' => 1, 'msg' => '菜单修改成功']);
         } else {
-            return response()->json(['status' => 0, 'message' => '菜单修改失败']);
+            return response()->json(['status' => 0, 'msg' => '菜单修改失败']);
         }
     }
 
@@ -106,7 +110,7 @@ class MenuController extends WechatController
             $this->actionDown($data['sort_id'], $parent_id);
         }
 
-        return response()->json(['status' => 1, 'message' => '修改成功']);
+        return response()->json(['status' => 1, 'msg' => '修改成功']);
     }
 
 
@@ -118,17 +122,15 @@ class MenuController extends WechatController
     public function actionDel(Request $request)
     {
         $id = $request->input('id');
-        $child_menus = Menu::where('parent_id', $id)->get();
 
-        if ($child_menus->count() > 0) {
-            return response()->json(['status' => 0, 'message' => '请先删除子菜单']);
+        try {
+            $menu = Menu::find($id);
+            $menu->delete();
+        } catch (\Exception $e) {
+            return response()->json(['status' => 0, 'msg' => $e->getMessage()]);
         }
 
-        if (Menu::destroy($id)) {
-            return response()->json(['status' => 1, 'message' => '菜单删除成功']);
-        } else {
-            return response()->json(['status' => 0, 'message' => '菜单删除失败']);
-        }
+        return response()->json(['status' => 1, 'msg' => '菜单删除成功']);
     }
 
 
@@ -141,10 +143,10 @@ class MenuController extends WechatController
 
         try {
             $menu->add($this->convertMenu());
-            return response()->json(['status' => 1, 'message' => '菜单添加成功']);
+            return response()->json(['status' => 1, 'msg' => '菜单添加成功']);
         } catch (\Exception $e) {
             $message = app('WechatTool')->getMessage($e);
-            return response()->json(['status' => 0, 'message' => $message]);
+            return response()->json(['status' => 0, 'msg' => $message]);
         }
     }
 
@@ -253,7 +255,7 @@ class MenuController extends WechatController
             if ($value['parent_id'] == $parent_id) {
 
                 if ($isShow && $value['parent_id'] != 0) {
-                    $value['name'] = '|-----' . $value['name'];
+                    $value['name'] = '&nbsp;&nbsp;&nbsp;&nbsp;|-----' . $value['name'];
                 }
 
                 if ($parent_id == 0) {
@@ -278,7 +280,8 @@ class MenuController extends WechatController
         foreach ($levelOnes as &$levelOne) {
             $levelTwo = Menu::where('parent_id', $levelOne->id)->select();
 
-            if ($levelTwo->count() >= $this->menu_role['level_two_max']) {
+//            if ($levelTwo->count() >= $this->menu_role['level_two_max']) {
+            if ($levelTwo->count() >= app('WechatTool')->getMenuRole('level_two_max')) {
                 $levelOne['addable'] = false;
             } else {
                 $levelOne['addable'] = true;

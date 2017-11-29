@@ -53,3 +53,37 @@ function layer_close()
     var index = parent.layer.getFrameIndex(window.name);
     parent.layer.close(index);
 }
+
+/**
+ * 表格页数连接
+ * @param vue
+ */
+function pageLinks(vue)
+{
+    layui.use('laypage', function(){
+        var laypage = layui.laypage;
+        //执行一个laypage实例
+        laypage.render({
+            elem: 'test' //注意，这里的 test1 是 ID，不用加 # 号
+            ,count: vue._data.count //数据总数，从服务端得到
+            ,limit: vue._data.limit
+            ,jump: function(obj, first) {
+                if (!first) {
+                    vue._data.current_page = obj.curr;
+                    vue.getUsers();
+                }
+            }
+        });
+    });
+}
+
+function load()
+{
+    var load;
+
+    layui.use('layer', function() {
+        load = layer.load(0, {shade: false});
+    });
+
+    return load;
+}
