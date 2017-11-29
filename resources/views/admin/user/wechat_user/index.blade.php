@@ -42,8 +42,8 @@
             </thead>
             <tbody>
             <tr v-for="user in users">
-                <td>
-                    {{--<img src=" @{{ user.wechat.avatar }}">--}}
+                <td style="text-align: center;">
+                    <img :src="user.wechat.avatar" width="50" height="50">
                 </td>
                 <td>@{{ user.wechat.nickname }}</td>
                 <td>@{{ user.wechat.name }}</td>
