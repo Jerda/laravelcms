@@ -19,4 +19,10 @@ class UserWechat extends Model
     {
         return $this->belongsTo('App\Model\User');
     }
+
+
+    public function group()
+    {
+        return $this->belongsTo('App\Model\Admin\Wechat\UserGroup', 'groupid', 'group_id');
+    }
 }

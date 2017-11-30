@@ -1,6 +1,6 @@
 <script src="{{ asset('js/admin/jquery.min.js') }}"></script>
 <!-- Bootstrap 3.3.7 -->
-{{--<!-- <script src="{{ asset('js/admin/bootstrap.min.js') }}"></script> -->--}}
+{{--<script src="{{ asset('js/admin/bootstrap.min.js') }}"></script>--}}
 
 <script src="{{ asset('plugins/layui/layui.js') }}"></script>
 <!-- vue -->

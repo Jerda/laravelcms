@@ -6,6 +6,8 @@ use App\Model\User;
 use Illuminate\Http\Request;
 use App\Model\Admin\Wechat\UserGroup;
 use App\Http\Controllers\Admin\BaseController;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Input;
 
 class WechatUserController extends BaseController
 {
@@ -27,6 +29,7 @@ class WechatUserController extends BaseController
         return view('admin.user.wechat_user.index');
     }
 
+
     /**
      * 获取微信用户数据
      * @param Request $request
@@ -34,19 +37,17 @@ class WechatUserController extends BaseController
      */
     public function getUsers(Request $request)
     {
-//        $limit = $request->input('limit');
         $data = $request->only(['limit', 'search']);
 
         if (!empty($data['search'])) {
             $this->formatSearchWhere($data['search']);
-//            $this->searchWhere[] = ['nickname', 'like', '%'.$data['search'][0]['nickname'].'%'];
         }
 
-        $users = User::with('wechat')
-            ->whereHas('wechat', function($query) {
-                $query->where($this->searchWhere);
-            })
-            ->paginate($data['limit']);
+        $users = User::where($this->searchDateWhere)->with(['wechat' => function ($query) {
+            $query->with('group');
+        }])->whereHas('wechat', function ($query) {
+            $query->where($this->searchWhere);
+        })->paginate($data['limit']);
 
         return response()->json(['data' => $users]);
     }
@@ -127,5 +128,11 @@ class WechatUserController extends BaseController
         $this->wechat_tool->modifyUserGroup($data['group_id'], $data['name']);
 
         return response()->json(['msg' => trans('system.modify_success')]);
+    }
+
+
+    public function showUserDetail()
+    {
+        return view('admin.user.wechat_user.user_detail');
     }
 }

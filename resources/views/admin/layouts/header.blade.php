@@ -16,7 +16,7 @@
     <ul class="layui-nav layui-layout-right kit-nav">
         <li class="layui-nav-item">
             <a href="javascript:;">
-                <img src="http://m.zhengjinfan.cn/images/0.jpg" class="layui-nav-img"> {{$username}}
+                {{$username}}
             </a>
             <dl class="layui-nav-child">
                 <dd><a href="javascript:;">基本资料</a></dd>
