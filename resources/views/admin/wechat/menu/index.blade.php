@@ -2,7 +2,7 @@
 @section('content')
     <div class="admin-main" id="app">
         <blockquote class="layui-elem-quote">
-            <a href="javascript:;" class="layui-btn layui-btn-sm" id="add" @click="addMenu">
+            <a href="{{ url('admin/wechat/menu/add') }}" class="layui-btn layui-btn-sm">
                 <i class="layui-icon"></i> 添加菜单
             </a>
             <a href="#" class="layui-btn layui-btn-sm" id="import" @click="issueMenus">
@@ -71,9 +71,11 @@
             2.一级菜单最多4个汉字，二级菜单最多7个汉字，多出来的部分将会以“...”代替。
         </blockquote>
     </div>
+
 @endsection
 @section('script')
     <script>
+
         axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
         var url = {
@@ -83,16 +85,17 @@
             showModify: "{{ url('admin/wechat/menu/showModify') }}",
             menuDel: "{{ url('admin/wechat/menu/del') }}",
             issueMenu: "{{ url('admin/wechat/menu/issue') }}",
+            getLevelOnes: "{{ url('admin/wechat/menu/getLevelOnes') }}",
         };
 
         new Vue({
             el: "#app",
             data: {
-                menus: []
+                menus: [],
             },
             methods: {
                 addMenu: function() {
-                    ('添加菜单', url.addMenu, '400', '420');
+//                    cms_s_edit('添加菜单', url.addMenu, '450', '420');
                 },
                 getMenus: function() {
                     axios.post(url.getMenus, {}).then(response => {
@@ -148,5 +151,4 @@
             }
         });
     </script>
-
 @endsection

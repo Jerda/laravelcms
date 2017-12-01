@@ -184,7 +184,8 @@ return [
         Mews\Captcha\CaptchaServiceProvider::class,
         //微信
         Overtrue\LaravelWeChat\ServiceProvider::class,
-
+        //权限
+        Spatie\Permission\PermissionServiceProvider::class,
         /**
          * 自定义
          */

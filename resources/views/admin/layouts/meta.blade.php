@@ -4,5 +4,7 @@
 <link rel="stylesheet" type="text/css" href="http://www.jq22.com/jquery/font-awesome.4.6.0.css">
 <link rel="stylesheet" href="{{ asset('plugins/toastr/toastr.min.css') }}">
 <link rel="stylesheet" href="{{ asset('plugins/build/css/app.css') }}">
+<link rel="stylesheet" href="{{ asset('css/admin/remodal-default-theme.css') }}">
+<link rel="stylesheet" href="{{ asset('css/admin/remodal.css') }}">
 <link rel="stylesheet" href="{{ asset('css/admin/common.css') }}">
 

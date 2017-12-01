@@ -10,18 +10,9 @@
 
 <script src="{{ asset('plugins/toastr/toastr.min.js') }}"></script>
 
+<script src="{{ asset('js/admin/remodal.min.js') }}"></script>
+
 <script src="{{ asset('js/admin/common.js') }}"></script>
-<script>
-    //    Vue.http.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name=csrf-token]').getAttribute('content');
 
-    // $(window).on('resize', function () {
 
-    //     var $content = $('.layui-body');
-    //     $content.height($(this).height()-147);
-    //     $content.find('iframe').each(function () {
-    //         $(this).height($content.height());
-    //     });
-    // }).resize();
-
-</script>
 

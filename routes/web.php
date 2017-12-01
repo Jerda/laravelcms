@@ -59,6 +59,7 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
             Route::get('/menu/showModify/{id}', 'Wechat\MenuController@showAdd');
             Route::post('/menu/del', 'Wechat\MenuController@actionDel');
             Route::post('/menu/issue', 'Wechat\MenuController@issueMenus');
+            Route::post('/menu/getLevelOnes', 'Wechat\MenuController@getLevelOnes');
         });
         /**
          * 用户管理
@@ -76,6 +77,35 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
                 Route::post('/add_user_group', 'User\WechatUserController@addUserGroup');
                 Route::post('/modify_user_group', 'User\WechatUserController@modifyUserGroup');
                 Route::get('/detail', 'User\WechatUserController@showUserDetail');
+            });
+        });
+        /**
+         * 系统设置
+         */
+        Route::group(['prefix' => 'system'], function() {
+            /**
+             * 权限管理
+             */
+            Route::group(['prefix' => 'permission'], function() {
+                Route::get('/index', 'System\PermissionController@index');
+                Route::get('/add', 'System\PermissionController@showAdd');
+                Route::post('/add', 'System\PermissionController@actionAdd');
+                Route::post('/getAll', 'System\PermissionController@getPermissions');
+                Route::post('/getPermissions', 'System\PermissionController@getPermissionByParentId');
+                Route::post('/del', 'System\PermissionController@del');
+            });
+            /**
+             * 角色管理
+             */
+            Route::group(['prefix' => 'role'], function() {
+                Route::get('/index', 'System\RoleController@index');
+                Route::get('/add', 'System\RoleController@showAdd');
+                Route::post('/add', 'System\RoleController@actionAdd');
+                Route::post('/getAll', 'System\RoleController@getRoles');
+            });
+            Route::group(['prefix' => 'admin'], function() {
+                Route::get('/index', 'System\AdminController@index');
+                Route::post('/getAll', 'System\AdminController@getAll');
             });
         });
     });

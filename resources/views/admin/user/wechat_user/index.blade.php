@@ -55,7 +55,7 @@
                 </td>
                 <td>@{{ user.wechat.city }}</td>
                 <td>@{{ user.wechat.group.name }}</td>
-                <td style="width:170px">@{{ user.wechat.subscribe_time }}</td>
+                <td style="width:170px">@{{ user.created_at }}</td>
                 <td style="width:135px">
                     <a class="layui-btn layui-btn-sm" href="{{ url('admin/user/user_wechat/detail') }}">查看</a>
 

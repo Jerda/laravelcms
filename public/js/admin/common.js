@@ -79,3 +79,35 @@ function pageLinks(vue)
         });
     });
 }
+
+
+/**
+ * 成功提示框
+ * 例：success(response.data.msg, {time:3000, go:-1});
+ * @param msg
+ * @param options
+ */
+function success(msg, options)
+{
+    toastr.success(msg);
+
+    if (options === undefined || options.time === undefined) {
+        options = {time:2500};
+    }
+
+    if (options !== undefined && options.go === -1) {
+        setTimeout(function () {
+            window.location = history.go(-1);
+        }, options.time);
+    }
+}
+
+
+/**
+ * 错误提示框
+ * @param msg
+ */
+function error(msg)
+{
+    toastr.error(msg);
+}

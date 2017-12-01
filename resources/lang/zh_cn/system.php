@@ -16,5 +16,6 @@ return [
     'del_success' => '删除成功',
     'add_success' => '添加成功',
     'modify_success' => '修改成功',
-    'name_is_exists' => '名称已存在'
+    'name_is_exists' => '名称已存在',
+    'please_del_child' => '请先删除子元素',
 ];

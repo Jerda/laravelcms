@@ -1,4 +1,4 @@
-@extends('admin.layouts.pop')
+@extends('admin.layouts.iframe_app')
 @section('content')
     <div class="box box-primary" style="border-top:0" id="app">
         {{--<div class="box-header with-border">
@@ -6,7 +6,7 @@
         </div>
         <!-- /.box-header -->
         <!-- form start -->--}}
-        <form role="form" id="form" class="layui-form">
+        <form role="form" id="form" class="">
             <div class="layui-form-item">
                 <!-- <div v-for="level in levelOnes">
                 </div> -->
@@ -49,12 +49,13 @@
                 <label for="key_word" class="layui-form-label">关键字</label>
                 <div class="layui-input-inline">
                     <input type="text" name="key_word" class="layui-input" id="key_word" :value="menu.key_word"
-                       v-model="key_word">
+                           v-model="key_word">
                 </div>
             </div>
             <div class="layui-form-item">
                 <div class="layui-input-block">
                     <a class="layui-btn" @click="addMenu">添加菜单</a>
+                    <a class="layui-btn" onclick="history.go(-1)">返回</a>
                 </div>
             </div>
             {{--<input type="text" name="id" id="id" :value="menu.id" style="display: none">--}}
@@ -64,21 +65,17 @@
 @section('script')
     <script type="text/javascript">
         axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
         var url = {
             'add': "{{ url('admin/wechat/menu/add') }}",
-            'modify': "{{ url('admin/wechat/menu/modify') }}"
+            'modify': "{{ url('admin/wechat/menu/modify') }}",
+            getLevelOnes: "{{ url('admin/wechat/menu/getLevelOnes') }}"
         };
-        let levelOnes = JSON.parse('{!! json_encode($levelOnes) !!}'); //一级菜单数据
-        let menu = JSON.parse('{!! json_encode($menu) !!}'); //修改模式，指定的菜单数据
-        layui.use(['form'], function() {
-            var form = layui.form
-        })
+
         new Vue({
             el: '#app',
             data: {
-                levelOnes: levelOnes,
-                menu: menu,
+                levelOnes: '',
+                menu: '',
                 id: '',
                 parent_id: '',
                 type: '',
@@ -93,17 +90,17 @@
             },
             mounted: function () {
                 this.$nextTick(function () {
-                    if (menu.length !== 0) {
+                    axios.post(url.getLevelOnes, {}).then(response => {
+                        this.levelOnes = response.data.data;
+                    });
+                    /*if (menu.length !== 0) {
                         this.parent_id = menu.parent_id;
                         this.type = menu.type;
                         this.name = menu.name;
                         this.url = menu.url;
                         this.key_word = menu.key_word;
                         this.id = menu.id;
-                    }
-                    if (this.levelOnes.length >= 3) {
-                        $('#levelOne').remove();
-                    }
+                    }*/
                 })
             },
             methods: {
@@ -129,7 +126,6 @@
                         $('#key_word').css('border-color', 'red');
                         check = false;
                     }
-
                     if (check) {
                         this.menu !== undefined ? url = url.add : url = url.modify;
                         let data = {
@@ -146,9 +142,7 @@
                                 }, 4000)
                             }
                         });
-
                     }
-
                 }
             },
             watch: {
@@ -182,5 +176,7 @@
                 },
             }
         });
+
+
     </script>
 @endsection

@@ -49,6 +49,17 @@ class MenuController extends WechatController
         return view('admin.wechat.menu.add', compact('levelOnes', 'menu'));
     }
 
+
+    public function getLevelOnes()
+    {
+        $levelOnes = Menu::levelOne()->get();
+
+        $this->menuAddable($levelOnes);
+
+        return response()->json(['data' => $levelOnes]);
+    }
+
+
     /**
      * 添加菜单
      *
