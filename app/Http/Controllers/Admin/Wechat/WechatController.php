@@ -19,4 +19,5 @@ class WeChatController extends Controller
     {
         return app('WechatTool')->server();
     }
+
 }

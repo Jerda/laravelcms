@@ -23,10 +23,7 @@ Route::get('captcha/{config?}', function(\Mews\Captcha\Captcha $captcha, $config
 
 Route::any('wechat/serve', 'Admin\Wechat\WechatController@actionServer');
 
-Route::any('test', function() {
-    $res = \Carbon\Carbon::createFromFormat('Y-m-d', '2017-11-10')->modify('-1 days')->toDateString();
-    dd($res);
-});
+Route::any('test', 'Admin\Wechat\MenuController@issueMenus');
 
 /*
 |--------------------------------------------------------------------------
@@ -60,6 +57,7 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
             Route::post('/menu/del', 'Wechat\MenuController@actionDel');
             Route::post('/menu/issue', 'Wechat\MenuController@issueMenus');
             Route::post('/menu/getLevelOnes', 'Wechat\MenuController@getLevelOnes');
+            Route::post('/qrcode', 'Wechat\WechatController@QRcode');
         });
         /**
          * 用户管理

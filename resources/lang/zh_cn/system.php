@@ -18,4 +18,6 @@ return [
     'modify_success' => '修改成功',
     'name_is_exists' => '名称已存在',
     'please_del_child' => '请先删除子元素',
+    'issue_success' => '发布成功',
+    'button_has_max' => '按钮已达最大数',
 ];

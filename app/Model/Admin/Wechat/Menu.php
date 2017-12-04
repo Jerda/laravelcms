@@ -38,4 +38,12 @@ class Menu extends Model
     {
         $query->where('parent_id',0)->orderBy('sort_id', 'desc');
     }
+
+
+    public function key($query)
+    {
+        $res = $query->where('key', 'like', 'key_%')->orderBy('key', 'desc')->first();
+
+
+    }
 }

@@ -56,6 +56,9 @@
         <div class="layui-form-item">
             <button type="button" class="layui-btn layui-btn-primary" @click="set">设置</button>
         </div>
+        <div class="layui-form-item">
+            <img src="" alt="">
+        </div>
     </form>
       </div>
     </fieldset>
@@ -63,11 +66,12 @@
 @endsection
 @section('script')
     <script>
-        Vue.http.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name=csrf-token]').getAttribute('content');
+        axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
         var url = {
-            'set': "{{ url('admin/wechat/config/set') }}",
-            'get': "{{ url('admin/wechat/config/get') }}"
+            set: "{{ url('admin/wechat/config/set') }}",
+            get: "{{ url('admin/wechat/config/get') }}",
+            getQRcode: "{{ url('admin/wechat/qrcode') }}"
         };
 
         new Vue({
@@ -80,7 +84,8 @@
                 app_secret: '',
                 api: '',
                 token: '',
-                encoding_aes_key: ''
+                encoding_aes_key: '',
+                qrcode: ''
             },
             methods: {
                 /*
@@ -108,8 +113,8 @@
                     加载读取数据
                      */
                     let data = {};
-                    this.$http.post(url.get, data).then(respond => {
-                        let data = respond.body.data;
+                    axios.post(url.get, data).then(respond => {
+                        let data = respond.data.data;
                         this.name = data.name;
                         this.wechat_id = data.wechat_id;
                         this.init_wechat_id = data.init_wechat_id;

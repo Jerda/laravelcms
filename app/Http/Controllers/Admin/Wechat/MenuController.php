@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin\Wechat;
 
+use Facades\App\Libraries\WechatTool;
 use Illuminate\Http\Request;
 use App\Model\Admin\Wechat\Menu;
 
@@ -18,6 +19,7 @@ class MenuController extends WechatController
         return view('admin.wechat.menu.index');
     }
 
+
     /**
      * 获取按钮
      * @return \Illuminate\Http\JsonResponse
@@ -27,6 +29,7 @@ class MenuController extends WechatController
         $menus = $this->formatMenu();
         return response()->json(['status' => 1, 'data' => $menus]);
     }
+
 
     /**
      * 添加菜单页面
@@ -105,6 +108,7 @@ class MenuController extends WechatController
         }
     }
 
+    
     /**
      * 修改菜单排序
      * @param Request $request
@@ -121,7 +125,7 @@ class MenuController extends WechatController
             $this->actionDown($data['sort_id'], $parent_id);
         }
 
-        return response()->json(['status' => 1, 'msg' => '修改成功']);
+        return response()->json(['status' => 1, 'msg' => trans('system.modify_success')]);
     }
 
 
@@ -141,25 +145,25 @@ class MenuController extends WechatController
             return response()->json(['status' => 0, 'msg' => $e->getMessage()]);
         }
 
-        return response()->json(['status' => 1, 'msg' => '菜单删除成功']);
+        return response()->json(['status' => 1, 'msg' => trans('system.del_success')]);
     }
 
 
     /**
-     * 发布菜单
+     * 发布按钮
+     * @return \Illuminate\Http\JsonResponse
      */
     public function issueMenus()
     {
-        $menu = $this->app->menu;
-
         try {
-            $menu->add($this->convertMenu());
-            return response()->json(['status' => 1, 'msg' => '菜单添加成功']);
+            WechatTool::issueMenus(new Menu());
+
+            return response()->json(['status' => 1, 'msg' => trans('system.issue_success')]);
         } catch (\Exception $e) {
-            $message = app('WechatTool')->getMessage($e);
-            return response()->json(['status' => 0, 'msg' => $message]);
+            return response()->json(['status' => 0, 'msg' => $e->getMessage()]);
         }
     }
+
 
     /**
      * 获取所有菜单并排序
@@ -172,115 +176,8 @@ class MenuController extends WechatController
         return $arr;
     }
 
-    /**
-     * 将菜单转换成微信接口所需的格式
-     * @return array
-     */
-    private function convertMenu()
-    {
-        $_menus = [];
-        $menus = Menu::all()->toArray();
-        $menus = $this->treeSort($menus);
 
-        foreach ($menus as $menu) {
-            $_menus[$menu['id']] = $menu;
 
-            if (isset($menu['children'])) {
-
-                foreach ($menu['children'] as $child) {
-                    $_menus[$child['parent_id']]['sub_button'][] = $child;
-                }
-
-                unset($_menus[$menu['id']]['children']);
-            }
-
-            /*if ($menu['parent_id'] == 0) {
-                $_menus[$menu['id']] = $menu;
-            } else {
-                $_menus[$menu['parent_id']]['sub_button'][] = $menu;
-            }*/
-
-        }
-
-        $new = [];
-
-        foreach ($_menus as $menu) {
-
-            if (isset($menu['sub_button'])) {
-
-                foreach ($menu['sub_button'] as $sub) {
-                    $add = [
-                        'type' => $sub['type'],
-                        'name' => $sub['name'],
-                    ];
-
-                    if ($add['type'] == 'click') {
-                        $add['key'] = $sub['key'];
-                    } elseif ($add['type'] == 'view') {
-                        $add['url'] = $sub['url'];
-                    } else {
-                        $add['key'] = $sub['key_word'];
-                    }
-
-                    $new[] = [
-                        'name' => $menu['name'],
-                        'sub_button' => [$add]
-                    ];
-                }
-            } else {
-                $add = [
-                    'type' => $menu['type'],
-                    'name' => $menu['name'],
-                ];
-
-                if ($add['type'] == 'click') {
-                    $add['key'] = $menu['key_word'];
-                } elseif ($add['type'] == 'view') {
-                    $add['url'] = $menu['url'];
-                } else {
-                    $add['key'] = $menu['key_word'];
-                }
-
-                $new[] = $add;
-            }
-        }
-
-        return $new;
-    }
-
-    /**
-     * 将子菜单装入父菜单中
-     *
-     * @param $data array
-     * @param bool $isShow
-     * @param $parent_id  integer   父权限ID，该参数一般不填，主要在递归时用。
-     * @param int $sort_id
-     * @return array
-     */
-    private function treeSort($data, $isShow = false, $parent_id = 0, $sort_id = 0)
-    {
-        static $arr = [];
-
-        foreach ($data as $value) {
-
-            if ($value['parent_id'] == $parent_id) {
-
-                if ($isShow && $value['parent_id'] != 0) {
-                    $value['name'] = '&nbsp;&nbsp;&nbsp;&nbsp;|-----' . $value['name'];
-                }
-
-                if ($parent_id == 0) {
-                    $arr[$value['sort_id']] = $value;
-                } else {
-                    $arr[$sort_id]['children'][$value['sort_id']] = $value;
-                }
-
-                $this->treeSort($data, $isShow, $value['id'], $value['sort_id']);
-            }
-        }
-
-        return $arr;
-    }
 
     /**
      * 判断二级菜单数量是否允许添加
@@ -299,6 +196,7 @@ class MenuController extends WechatController
             }
         }
     }
+
 
     /**
      * 获取菜单最后一个排序号
@@ -409,5 +307,40 @@ class MenuController extends WechatController
                 "type" => "click", "name" => "子菜单1", "key" => "key"
             ]
         ];
+    }
+
+
+    /**
+     * 将子菜单装入父菜单中
+     *
+     * @param $data array
+     * @param bool $isShow
+     * @param $parent_id  integer   父权限ID，该参数一般不填，主要在递归时用。
+     * @param int $sort_id
+     * @return array
+     */
+    private function treeSort($data, $isShow = false, $parent_id = 0, $sort_id = 0)
+    {
+        static $arr = [];
+
+        foreach ($data as $value) {
+
+            if ($value['parent_id'] == $parent_id) {
+
+                if ($isShow && $value['parent_id'] != 0) {
+                    $value['name'] = '&nbsp;&nbsp;&nbsp;&nbsp;|-----' . $value['name'];
+                }
+
+                if ($parent_id == 0) {
+                    $arr[$value['sort_id']] = $value;
+                } else {
+                    $arr[$sort_id]['children'][$value['sort_id']] = $value;
+                }
+
+                $this->treeSort($data, $isShow, $value['id'], $value['sort_id']);
+            }
+        }
+
+        return $arr;
     }
 }

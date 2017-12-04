@@ -133,11 +133,12 @@
                         shade: [0.1,'#fff'] //0.1透明度的白色背景
                     });
                     axios.post(url.issueMenu).then(response => {
-
-                        if (response.body.status === 1) {
-                            toastr.success(response.data.message);
+                        console.log(1);
+                        console.log(response.data);
+                        if (response.data.status === 1) {
+                            toastr.success(response.data.msg);
                         } else {
-                            toastr.error(response.data.message);
+                            toastr.error(response.data.msg);
                         }
 
                         parent.layer.close(load);

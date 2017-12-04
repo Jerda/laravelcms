@@ -10,7 +10,6 @@ trait WechatMenu
     |--------------------------------------------------------------------------
     | 微信信息注册
     |--------------------------------------------------------------------------
-    |
     */
 
     /**
@@ -22,6 +21,25 @@ trait WechatMenu
 
             static::$event(function ($model) use ($event){
                 switch ($event) {
+                    case 'creating':
+                        /**
+                         * 为'click'按钮添加key
+                         */
+                        if ($model->type == 'click') {
+                            $res = $model->where('key', 'like', 'key_%')->first();
+
+                            if (!empty($res)) {
+                                $res = explode('_', $res['key']);
+                                $_res = $res[1] + 1;
+
+                                if ($_res / 10 < 1) {
+                                    $model['key'] = 'key_0' . $_res;
+                                } else {
+                                    $model['key'] = 'key_' . $_res;
+                                }
+                            }
+                        }
+                        break;
                     case 'created' :
                         /**
                          * 验证按钮数量
@@ -33,13 +51,13 @@ trait WechatMenu
                         $count = Menu::where('parent_id', $model->parent_id)->count();
 
                         if ($count >= $max) {
-                            throw new \Exception('按钮已达最大数');
+                            throw new \Exception(trans('wechat.button_has_max'));
                         }
 
                         break;
                     case 'deleting' :
                         if (Menu::where('parent_id', $model->id)->first()) {
-                            throw new \Exception('请先删除子按钮');
+                            throw new \Exception(trans('system.please_del_child'));
                         }
 
                         $menus = Menu::where('parent_id', $model->parent_id)
@@ -72,7 +90,10 @@ trait WechatMenu
             return static::$recordEvents;
         }
 
-        return ['created', 'deleting'];
+        return ['created', 'creating', 'deleting'];
     }
+
+
+
 
 }
