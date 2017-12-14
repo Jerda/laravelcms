@@ -1,12 +1,12 @@
 @extends('admin.layouts.iframe_app')
 <style>
-    .custom_group_image{
+    .custom_group_image {
         -webkit-box-sizing: border-box;
         -moz-box-sizing: border-box;
         box-sizing: border-box;
         width: 188px;
         height: 120px;
-        margin:10px 10px;
+        margin: 10px 10px;
         float: left;
         border: 1px solid #e3e3e3;
         border-radius: 5px;
@@ -15,11 +15,26 @@
         padding: 6px 15px;
         text-align: center;
     }
-    .custom_group_image img{
+
+    .custom_group_image img {
         display: inline;
         max-width: 100%;
         max-height: 100%;
     }
+
+    .custom_group_image div {
+        position: relative;
+        bottom: 30px;
+        z-index: 999;
+        height: 30px;
+        background-color: rgba(0, 0, 0, 0.3)
+    }
+    .custom_group_image div a {
+        color:#fff;
+        line-height: 30px;
+        display: block;
+    }
+
 </style>
 @section('content')
     <div class="layui-tab" id="app">
@@ -72,11 +87,14 @@
             </div>
         </div>
     </div>
-<script type="text/x-template" id="image-groups">
-    <div class="custom_group_image">
-        <img :src="image.path" alt="">
-    </div>
-</script>
+    <script type="text/x-template" id="image-groups">
+        <div class="custom_group_image" v-on:mouseover="mouseover" v-on:mouseleave="mouseleave">
+            <img :src="image.path" alt="">
+            <div v-show="show">
+                <a>删除</a>
+            </div>
+        </div>
+    </script>
 @endsection
 @section('script')
     <script>
@@ -84,19 +102,32 @@
             getImages: "{{ url('admin/wechat/material/getImages') }}"
         };
 
-        layui.use('element', function(){
+        layui.use('element', function () {
             var element = layui.element;
-        });
-
-        axios.post(url.getImages, {}).then(response => {
-            console.log(response.data);
         });
     </script>
     <script>
         Vue.component('image-groups', {
             template: '#image-groups',
             props: ['image'],
+            data: function() {
+                return {
+                    show: false,
+                    mouse_style: false
+                }
+            },
+            methods: {
+                mouseover: function() {
+                    this.show = true;
+                    this.mouse_style = true;
+                },
+                mouseleave: function() {
+                    this.show = false;
+                    this.mouse_style = false;
+                }
+            },
         });
+
         new Vue({
             el: '#app',
             data: {
@@ -107,8 +138,8 @@
                 limit: parent.PAGE_LIMIT,
             },
             methods: {
-                getImages: function() {
-                    axios.post(url.getImages,{limit:this.limit}).then(response => {
+                getImages: function () {
+                    axios.post(url.getImages, {limit: this.limit}).then(response => {
                         this.images = response.data.data.data;
                         this.count = response.data.data.total;
                         this.current_page = response.data.data.current_page;
@@ -116,7 +147,7 @@
                     });
                 }
             },
-            mounted: function() {
+            mounted: function () {
                 this.$nextTick(function () {
                     this.getImages();
                 })
