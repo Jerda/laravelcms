@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Admin\Wechat;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\Admin\BaseController;
 
-class WeChatController extends Controller
+class WeChatController extends BaseController
 {
     /*
     |--------------------------------------------------------------------------

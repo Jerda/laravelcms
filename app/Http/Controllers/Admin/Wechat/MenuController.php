@@ -85,7 +85,7 @@ class MenuController extends WechatController
         try {
             $menu->create($data);
         } catch (\Exception $e) {
-            return response()->json(['status' => 1, 'msg' => $e->getMessage()]);
+            return response()->json(['status' => 0, 'msg' => $e->getMessage()]);
         }
 
         return response()->json(['status' => 1, 'msg' => '菜单创建成功']);
@@ -108,7 +108,7 @@ class MenuController extends WechatController
         }
     }
 
-    
+
     /**
      * 修改菜单排序
      * @param Request $request
@@ -177,8 +177,6 @@ class MenuController extends WechatController
     }
 
 
-
-
     /**
      * 判断二级菜单数量是否允许添加
      * @param $levelOnes
@@ -188,7 +186,6 @@ class MenuController extends WechatController
         foreach ($levelOnes as &$levelOne) {
             $levelTwo = Menu::where('parent_id', $levelOne->id)->select();
 
-//            if ($levelTwo->count() >= $this->menu_role['level_two_max']) {
             if ($levelTwo->count() >= app('WechatTool')->getMenuRole('level_two_max')) {
                 $levelOne['addable'] = false;
             } else {
@@ -224,6 +221,7 @@ class MenuController extends WechatController
         }
     }
 
+
     /**
      * 菜单向上移动
      * @param $sort_id
@@ -238,6 +236,7 @@ class MenuController extends WechatController
         $up_menu->save();
         $current_menu->save();
     }
+
 
     /**
      * 菜单向下移动
@@ -272,6 +271,7 @@ class MenuController extends WechatController
         return $arr;
     }
 
+
     /**
      * 获取菜单关联的上一个菜单或下一个菜单,该方法用户菜单排序
      * @param $sort_id
@@ -295,20 +295,6 @@ class MenuController extends WechatController
         }
     }
 
-    public function test()
-    {
-        $arr = [
-            "name" => "菜单1",
-            "sub_button" => ["type" => "view", "name" => "子菜单1", "url" => "www.sina.com"],
-        ];
-        $arr1 = [
-            "name" => "菜单2",
-            "sub_button" => [
-                "type" => "click", "name" => "子菜单1", "key" => "key"
-            ]
-        ];
-    }
-
 
     /**
      * 将子菜单装入父菜单中
@@ -319,7 +305,7 @@ class MenuController extends WechatController
      * @param int $sort_id
      * @return array
      */
-    private function treeSort($data, $isShow = false, $parent_id = 0, $sort_id = 0)
+    protected function treeSort($data, $isShow = false, $parent_id = 0, $sort_id = 0)
     {
         static $arr = [];
 

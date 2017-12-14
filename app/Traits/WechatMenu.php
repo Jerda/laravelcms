@@ -23,6 +23,18 @@ trait WechatMenu
                 switch ($event) {
                     case 'creating':
                         /**
+                         * 验证按钮数量
+                         */
+                        $level = $model->parent_id == 0 ? 'level_one_max' : 'level_two_max';
+
+                        $max = app('WechatTool')->getMenuRole($level);
+
+                        $count = Menu::where('parent_id', $model->parent_id)->count();
+
+                        if ($count >= $max) {
+                            throw new \Exception(trans('system.button_has_max'));
+                        }
+                        /**
                          * 为'click'按钮添加key
                          */
                         if ($model->type == 'click') {
@@ -39,21 +51,6 @@ trait WechatMenu
                                 }
                             }
                         }
-                        break;
-                    case 'created' :
-                        /**
-                         * 验证按钮数量
-                         */
-                        $level = $model->parent_id == 0 ? 'level_one_max' : 'level_two_max';
-
-                        $max = app('WechatTool')->getMenuRole($level);
-
-                        $count = Menu::where('parent_id', $model->parent_id)->count();
-
-                        if ($count >= $max) {
-                            throw new \Exception(trans('wechat.button_has_max'));
-                        }
-
                         break;
                     case 'deleting' :
                         if (Menu::where('parent_id', $model->id)->first()) {

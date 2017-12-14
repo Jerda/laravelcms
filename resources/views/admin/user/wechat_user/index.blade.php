@@ -17,7 +17,7 @@
             <a class="layui-btn layui-btn-sm" id="import" href="javascript:void(0)" @click="synchronize">
                 <i class="layui-icon"></i> 同步微信用户
             </a>
-            <a class="layui-btn layui-btn-sm" id="import" href="javascript:void(0)" @click="showGroup">
+            <a class="layui-btn layui-btn-sm" href="{{ url('admin/user/user_wechat/group') }}">
                 <i class="layui-icon"></i> 用户分组
             </a>
             {{--<form class="layui-form">
@@ -121,10 +121,6 @@
                                 pageLinks(this);
                             }
                         });
-                },
-
-                showGroup: function () {
-                    cms_s_edit('用户分组', url.group, '400', '420');
                 },
                 search: function () {
                     var _data = [];

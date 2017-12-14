@@ -22,9 +22,7 @@ Route::get('captcha/{config?}', function(\Mews\Captcha\Captcha $captcha, $config
 });
 
 Route::any('wechat/serve', 'Admin\Wechat\WechatController@actionServer');
-
-Route::any('test', 'Admin\Wechat\MenuController@issueMenus');
-
+Route::any('test', 'Admin\Wechat\MaterialController@getImages');
 /*
 |--------------------------------------------------------------------------
 | 后台管理系统路由
@@ -41,6 +39,7 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
     Route::group(['middleware' => 'admin'], function() {
         Route::get('/logout', 'Auth\LogoutController@logout');
         Route::get('index', 'IndexController@index');
+        Route::post('/uploadImage', 'BaseController@uploadImage');
         /**
          * 微信路由
          */
@@ -58,6 +57,13 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
             Route::post('/menu/issue', 'Wechat\MenuController@issueMenus');
             Route::post('/menu/getLevelOnes', 'Wechat\MenuController@getLevelOnes');
             Route::post('/qrcode', 'Wechat\WechatController@QRcode');
+            Route::get('/callback', 'Wechat\CallbackController@index');
+            Route::post('/callback/upload', 'Wechat\CallbackController@uploadImg');
+            Route::get('/material', 'Wechat\MaterialController@index');
+            Route::get('/material/article', 'Wechat\MaterialController@showAddArticle');
+            Route::get('/material/image', 'Wechat\MaterialController@showAddImage');
+            Route::post('/material/addImage', 'Wechat\MaterialController@addImage');
+            Route::post('/material/getImages', 'Wechat\MaterialController@getImages');
         });
         /**
          * 用户管理
@@ -75,6 +81,8 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
                 Route::post('/add_user_group', 'User\WechatUserController@addUserGroup');
                 Route::post('/modify_user_group', 'User\WechatUserController@modifyUserGroup');
                 Route::get('/detail', 'User\WechatUserController@showUserDetail');
+                Route::post('/getGroups', 'User\WechatUserController@getGroups');
+                Route::post('/delGroup', 'User\WechatUserController@delUserGroup');
             });
         });
         /**
@@ -91,6 +99,8 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
                 Route::post('/getAll', 'System\PermissionController@getPermissions');
                 Route::post('/getPermissions', 'System\PermissionController@getPermissionByParentId');
                 Route::post('/del', 'System\PermissionController@del');
+                Route::post('/getPermissionsByTree', 'System\PermissionController@getPermissionsByTree');
+
             });
             /**
              * 角色管理
@@ -101,9 +111,13 @@ Route::group(['prefix' => 'admin', 'namespace' => 'Admin'], function () {
                 Route::post('/add', 'System\RoleController@actionAdd');
                 Route::post('/getAll', 'System\RoleController@getRoles');
             });
+            /**
+             * 管理员
+             */
             Route::group(['prefix' => 'admin'], function() {
                 Route::get('/index', 'System\AdminController@index');
                 Route::post('/getAll', 'System\AdminController@getAll');
+                Route::get('/add', 'System\AdminController@showAdd');
             });
         });
     });

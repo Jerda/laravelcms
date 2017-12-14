@@ -3,11 +3,11 @@
     <div class="admin-main" id="app">
         <blockquote class="layui-elem-quote">
             <a href="{{ url('admin/system/admin/add') }}" class="layui-btn layui-btn-sm">
-                <i class="layui-icon"></i> 添加权限
+                <i class="layui-icon"></i> 添加管理员
             </a>
         </blockquote>
         <fieldset class="layui-elem-field">
-            <legend>权限管理</legend>
+            <legend>管理员管理</legend>
             <div class="layui-field-box layui-form">
                 <table class="layui-table admin-table">
                     <thead>

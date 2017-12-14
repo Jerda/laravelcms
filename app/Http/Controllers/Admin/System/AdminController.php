@@ -13,6 +13,12 @@ class AdminController extends BaseController
     }
 
 
+    public function showAdd()
+    {
+        return view('admin.system.admin.add');
+    }
+
+
     public function getAll()
     {
         $admins = Admin::all();

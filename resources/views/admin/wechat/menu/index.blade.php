@@ -75,7 +75,6 @@
 @endsection
 @section('script')
     <script>
-
         axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
         var url = {
@@ -113,8 +112,13 @@
                     }, function(index){
                         parent.layer.close(index);
                         axios.post(url.menuDel, {id: id}).then(response => {
-                            toastr.success(response.data.msg);
-                            _this.getMenus();
+                            console.log(response.data);
+                            if (response.data.status == 1) {
+                                success(response.data.msg);
+                                _this.getMenus();
+                            } else {
+                                error(response.data.msg)
+                            }
                         });
                     });
                 },

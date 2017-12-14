@@ -133,13 +133,10 @@
                             key_word: this.key_word
                         };
                         axios.post(url, data).then(response => {
-                            if (response.data.status == 0) {
-                                toastr.error(response.data.msg);
+                            if (response.data.status === 1) {
+                                success(response.data.msg,  {time:3000, go:-1});
                             } else {
-                                toastr.success(response.data.msg);
-                                setTimeout(function() {
-                                    layer_close();
-                                }, 4000)
+                                error(response.data.msg);
                             }
                         });
                     }

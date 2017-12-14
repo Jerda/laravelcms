@@ -4,10 +4,9 @@ namespace App\Http\Controllers\Admin\User;
 
 use App\Model\User;
 use Illuminate\Http\Request;
+use Facades\App\Libraries\WechatTool;
 use App\Model\Admin\Wechat\UserGroup;
 use App\Http\Controllers\Admin\BaseController;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Input;
 
 class WechatUserController extends BaseController
 {
@@ -17,12 +16,6 @@ class WechatUserController extends BaseController
     |--------------------------------------------------------------------------
     */
 
-    private $wechat_tool;
-
-    public function __construct()
-    {
-        $this->wechat_tool = app('WechatTool');
-    }
 
     public function index()
     {
@@ -59,12 +52,12 @@ class WechatUserController extends BaseController
      */
     public function synchronizeUsers()
     {
-        $open_ids = $this->wechat_tool->getUserList();
+        $open_ids = WechatTool::getUserList();
 
-        foreach ($open_ids->data['openid'] as $open_id) {
+        foreach ($open_ids['data']['openid'] as $open_id) {
 
-            if (empty($this->wechat_tool->getUserIdByOpenID($open_id))) {
-                $this->wechat_tool->addUser($open_id);
+            if (empty(WechatTool::getUserIdByOpenID($open_id))) {
+                WechatTool::addUser($open_id);
             }
         }
 
@@ -78,13 +71,21 @@ class WechatUserController extends BaseController
     }
 
 
+    public function getGroups()
+    {
+        $groups = UserGroup::all();
+
+        return response()->json(['data' => $groups]);
+    }
+
+
     /**
      * 同步用户组
      * @return \Illuminate\Http\JsonResponse
      */
     public function synchronizeUserGroups()
     {
-        $groups = $this->wechat_tool->getUserGroups()->groups;
+        $groups = WechatTool::getUserGroups()->groups;
 
         foreach ($groups as $group) {
 
@@ -93,7 +94,7 @@ class WechatUserController extends BaseController
             }
         }
 
-        return response()->json(['msg' => trans('system.synchronize_success')]);
+        return response()->json(['status' => 1, 'msg' => trans('system.synchronize_success')]);
     }
 
 
@@ -110,7 +111,7 @@ class WechatUserController extends BaseController
             return response()->json(['status' => 0, 'msg' => trans('system.name_is_exists')]);
         }
 
-        $this->wechat_tool->addUserGroup($name);
+        WechatTool::addUserGroup($name);
 
         return response()->json(['status' => 1, 'msg' => trans('system.add_success')]);
     }
@@ -125,9 +126,23 @@ class WechatUserController extends BaseController
     {
         $data = $request->only(['group_id', 'name']);
 
-        $this->wechat_tool->modifyUserGroup($data['group_id'], $data['name']);
+        WechatTool::modifyUserGroup($data['group_id'], $data['name']);
+
+        UserGroup::where('group_id', $data['group_id'])->update(['name' => $data['name']]);
 
         return response()->json(['msg' => trans('system.modify_success')]);
+    }
+
+
+    public function delUserGroup(Request $request)
+    {
+        $group_id = $request->input('group_id');
+
+        WechatTool::delUserGroup($group_id);
+
+        UserGroup::where('group_id', $group_id)->delete();
+
+        return response()->json(['msg' => trans('system.del_success')]);
     }
 
 

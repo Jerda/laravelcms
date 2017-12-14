@@ -3,10 +3,10 @@
 namespace App\Libraries;
 
 use App\Model\User;
+use EasyWeChat\Factory;
 use App\Model\UserWechat;
 use App\Model\Admin\WechatAccount;
 use Illuminate\Database\Eloquent\Model;
-use EasyWeChat\Foundation\Application as EasyWeChat;
 
 class WechatTool
 {
@@ -38,7 +38,7 @@ class WechatTool
         'log'     => [
             'level'      => 'debug',
             'permission' => 0777,
-            'file'       => '/usr/share/nginx/html/basecms/storage/logs/easywechat.log',
+            'file'       => '/usr/share/nginx/html/laravelcms/storage/logs/easywechat.log',
         ],
     ];
 
@@ -58,7 +58,7 @@ class WechatTool
     {
         $this->getOptions();
 
-        $this->app = new EasyWeChat($this->options);
+        $this->app = Factory::officialAccount($this->options);
 
         $this->userService = $this->app->user;
     }
@@ -72,8 +72,9 @@ class WechatTool
     {
         $server = $this->app->server;
 
-        $server->setMessageHandler(function ($message) {
-            switch ($message->MsgType) {
+        $server->push(function ($message) {
+
+            switch ($message['MsgType']) {
                 case 'event':
                     return $this->event($message);
                     break;
@@ -102,9 +103,7 @@ class WechatTool
             }
         });
 
-        $response = $server->serve();
-
-        return $response;
+         return $server->serve();
     }
 
 
@@ -115,15 +114,15 @@ class WechatTool
      */
     private function event($message)
     {
-        switch ($message->Event) {
+        switch ($message['Event']) {
             case 'subscribe' :        //关注
-                $this->addUser($message->FromUserName);
+                $this->addUser($message['FromUserName']);
 
                 return trans('system.wechat_welcome');
 
                 break;
             case 'unsubscribe' :      //取消关注
-                $this->delUser($message->FromUserName);
+                $this->delUser($message['FromUserName']);
 
                 break;
         }
@@ -149,23 +148,23 @@ class WechatTool
 
     /**
      * 获取用户列表
-     * @return \EasyWeChat\Support\Collection
+     * @return mixed
      */
     public function getUserList()
     {
-        return $this->userService->lists();
+        return $this->userService->list();
     }
 
 
     /**
      * 获取用户微信信息
      * @param $openIds
-     * @return \EasyWeChat\Support\Collection
+     * @return array|\EasyWeChat\Kernel\Support\Collection|object|\Psr\Http\Message\ResponseInterface|string
      */
     public function getUserWechat($openIds)
     {
         if (is_array($openIds)) {
-            return $this->userService->batchGet($openIds);
+            return $this->userService->select($openIds);
         } else {
             return $this->userService->get($openIds);
         }
@@ -182,7 +181,7 @@ class WechatTool
 
         $User = new User();
 
-        $User->setWechatData($this->formatUserDetailData($user_wechat->toArray()));
+        $User->setWechatData($this->formatUserDetailData($user_wechat));
 
         $User::create([]);
     }
@@ -247,6 +246,16 @@ class WechatTool
 
 
     /**
+     * 删除用户分组
+     * @param $group_id
+     */
+    public function delUserGroup($group_id)
+    {
+        $this->app->user_group->delete($group_id);
+    }
+
+
+    /**
      * 获取微信按钮规则
      * @param $name
      * @return array|int
@@ -271,7 +280,7 @@ class WechatTool
         $menu = $this->app->menu;
 
         try {
-            $menu->add($this->convertMenu($model));
+            $menu->create($this->convertMenu($model));
         } catch (\Exception $e) {
             throw new \Exception($this->getErrorMessage($e));
         }
@@ -415,5 +424,11 @@ class WechatTool
         }
 
         return $arr;
+    }
+    
+    /*--------消息------------*/
+    public function uploadImage($path)
+    {
+        return $this->app->material->uploadImage($path);
     }
 }

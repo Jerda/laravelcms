@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Carbon\Carbon;
 use App\Http\Controllers\Controller;
 use Illuminate\Database\Eloquent\Model;
-use Spatie\Permission\Models\Permission;
+use Illuminate\Http\Request;
 
 class BaseController extends Controller
 {
@@ -17,6 +17,22 @@ class BaseController extends Controller
 
     protected $searchDateWhere = [];
 
+
+    /**
+     * BaseController constructor.
+     */
+    public function __construct()
+    {
+        $config = config('system');
+
+        $this->title = $config['admin_system_name'];
+    }
+
+
+    /**
+     * todo 此方法在了解更多EloQuent后进行重构
+     * @param $data
+     */
     protected function formatSearchWhere($data)
     {
             foreach ($data as $value) {
@@ -131,5 +147,27 @@ class BaseController extends Controller
         }
 
         return $str.'|----';
+    }
+
+
+    /**
+     * 上传图片
+     * @param Request $request
+     * @return false|string
+     */
+    public function uploadImage(Request $request)
+    {
+        $path = $request->file('file')->store('public');
+
+        $res = explode('/', $path);
+
+        $image_name = array_pop($res);
+
+        $path = [
+            'url' => $request->root().'/storage/'.$image_name,
+            'local' => '/storage/'.$image_name
+        ];
+
+        return response()->json(['data' => $path]);
     }
 }

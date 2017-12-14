@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Admin\Wechat;
 
-use App\Model\Admin\WechatAccount;
 use Illuminate\Http\Request;
+use App\Model\Admin\WechatAccount;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Admin\BaseController;
 

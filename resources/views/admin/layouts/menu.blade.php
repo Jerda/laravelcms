@@ -20,23 +20,30 @@
                 <dl class="layui-nav-child">
                     <dd>
                         <a href="javascript:;" data-url="{{ url('admin/wechat/config') }}" data-icon="fa-user"
-                           data-title="接口管理" kit-target data-id='12'>
+                           data-title="接口管理" kit-target data-id='11'>
                             <i class="fa fa-user" aria-hidden="true"></i>
                             <span>接口管理</span>
                         </a>
                     </dd>
                     <dd>
                         <a href="javascript:;" data-url="{{ url('admin/wechat/menu') }}" data-icon="fa-user"
-                           data-title="自定义菜单" kit-target data-id='13'>
+                           data-title="自定义菜单" kit-target data-id='12'>
                             <i class="fa fa-user" aria-hidden="true"></i>
                             <span>自定义菜单</span>
                         </a>
                     </dd>
                     <dd>
-                        <a href="javascript:;" data-url="javascript:;" data-icon="fa-user" data-title="自定义回复" kit-target
-                           data-id='4'>
+                        <a href="javascript:;" data-url="{{ url('admin/wechat/callback') }}" data-icon="fa-user"
+                           data-title="自定义回复" kit-target data-id='13'>
                             <i class="fa fa-user" aria-hidden="true"></i>
                             <span>自定义回复</span>
+                        </a>
+                    </dd>
+                    <dd>
+                        <a href="javascript:;" data-url="{{ url('admin/wechat/material') }}" data-icon="fa-user"
+                           data-title="素材管理" kit-target data-id='14'>
+                            <i class="fa fa-user" aria-hidden="true"></i>
+                            <span>素材管理</span>
                         </a>
                     </dd>
                 </dl>
@@ -45,7 +52,7 @@
                 <dl class="layui-nav-child">
                     <dd>
                         <a href="javascript:;" data-url="{{ url('admin/system/admin/index') }}" data-icon="fa-user"
-                           data-title="角色管理" kit-target data-id='31'>
+                           data-title="管理员管理" kit-target data-id='31'>
                             <i class="fa fa-user" aria-hidden="true"></i>
                             <span>管理员管理</span>
                         </a>

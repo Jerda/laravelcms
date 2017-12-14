@@ -67,6 +67,24 @@ class PermissionController extends BaseController
     }
 
 
+    public function getPermissionsByTree()
+    {
+        $permissions = Permission::all()->toArray();
+
+        $arr = [];
+
+        foreach ($permissions as $permission) {
+            if ($permission['parent_id'] == 0) {
+                $arr[$permission['id']] = ['name' => $permission['name'], 'children' => []];
+            } else {
+                $arr[$permission['parent_id']]['children'][] = ['name' => $permission['name']];
+            }
+        }
+
+        return response()->json(['data' => $arr]);
+    }
+
+
     /**
      * 通过parent_id获取权限
      * @param Request $request
